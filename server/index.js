@@ -4,9 +4,21 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 // import sql from 'postgres';
 
-const pool = require("./db");
+//const pool = require("./db.js");
 
-//import pool from './db.js';
+// import pool from './db.js';
+
+import pg from 'pg';
+
+const pool = new pg.Pool({
+    user: "postgres",
+    password: "turtle650",
+    host: "localhost",
+    port: 5432,
+    database: "gato-gramo"
+
+});
+
 
  
 const app = express();
