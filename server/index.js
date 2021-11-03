@@ -1,24 +1,9 @@
 import express from 'express';
 import cors from 'cors';
-//import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-// import sql from 'postgres';
 
-//const pool = require("./db.js");
-
-// import pool from './db.js';
-
-import pg from 'pg';
-
-const pool = new pg.Pool({
-    user: "postgres",
-    password: "turtle650",
-    host: "localhost",
-    port: 5432,
-    database: "gato-gramo"
-
-});
-
+import userRoutes from './routes/users.js';
+import gramRoutes from './routes/grams.js';
 
  
 const app = express();
@@ -31,6 +16,9 @@ app.use(express.urlencoded({ limit: "30mb", extended: true}));
 
 // middleware
 app.use(cors());
+
+app.use('/users', userRoutes);
+app.use('/grams', gramRoutes);
 
 app.listen(5000, () =>{
     console.log("server has started on port 5000");

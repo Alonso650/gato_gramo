@@ -1,4 +1,4 @@
-CREATE DATABASE gatogramo;
+CREATE DATABASE gato-gramo;
 
 CREATE TABLE users(
     users_id SERIAL PRIMARY KEY,
@@ -9,3 +9,10 @@ CREATE TABLE users(
     email VARCHAR(100),
     userAvatar VARCHAR(250)
 );
+
+CREATE TABLE gram_posts(
+    gram_id SERIAL PRIMARY KEY,
+    title VARCHAR(500),
+    gram_image VARCHAR(500),
+    -- FOREIGN KEY (user_id) REFERENCES users(user_id)
+)
