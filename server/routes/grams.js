@@ -4,10 +4,10 @@ import { getAllGrams, getGram, createGram, updateGram, deleteGram } from '../con
 
 const router = express.Router();
 
-router.get('/', getAllGrams);
-router.get('/:id', getGram);
-router.post('/', createGram);
-router.put('/:id', updateGram);
-router.delete('/:id', deleteGram);
+router.get('/getAllGrams', getAllGrams);
+router.get('/getGram/:id', getGram);
+router.post('/createGram', createGram);
+router.put('/updateGram/:id', updateGram);
+router.delete('/deleteGram/:id', deleteGram);
 
 export default router;
