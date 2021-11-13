@@ -33,3 +33,5 @@ const User = ({currentId, setCurrentId}) => {
         </div>
     )
 };
+
+export default User;
