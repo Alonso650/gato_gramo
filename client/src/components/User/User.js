@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { createUser, updateUser } from '../../actions/users';
 
 const User = ({currentId, setCurrentId}) => {
     const [userData, setUserData] = useState({ username: '', pw: '', firstName: '', lastName: '', email: '', selectedImage: ''});
@@ -18,7 +19,7 @@ const User = ({currentId, setCurrentId}) => {
 
     const handleSubmit = async(error) => {
         error.preventDefault();
-        if(currentId == 0){
+        if(currentId === 0){
             dispatch(createUser(userData));
             clear();
         }else{
@@ -30,6 +31,44 @@ const User = ({currentId, setCurrentId}) => {
     return(
         <div>
             <h1>This is the user form</h1>
+            <form onSubmit={handleSubmit}>
+                <input 
+                    type="text" 
+                    value={userData.firstName}
+                    placeholder="First Name"
+                    onChange={(e) =>setUserData({...userData, firstName: e.target.value })}
+                />
+                <input 
+                    type="text" 
+                    value={userData.lastName} 
+                    placeholder="Last Name"
+                    onChange={(e) => setUserData({...userData, lastName: e.target.value })}
+                />
+                <input 
+                    type="text" 
+                    value={userData.username}
+                    placeholder="User Name"
+                    onChange={(e) => setUserData({...userData, username: e.target.value })}
+                />
+                <input 
+                    type="email" 
+                    value={userData.email} 
+                    placeholder="Email"
+                    onChange={(e) => setUserData({...userData, email: e.target.value })}
+                />  
+                <input 
+                    type="file" 
+                    value={userData.selectedImage}
+                    onChange={(e) => setUserData({...userData, selectedImage: e.target.value })}
+                />          
+                <input 
+                    type="password" 
+                    value={userData.password} 
+                    placeholder="Password"
+                    onChange={(e) => setUserData({...userData, password: e.target.value })}
+                />  
+                <button type="submit" value="submit">Submit</button>
+            </form>
         </div>
     )
 };
