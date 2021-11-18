@@ -21,10 +21,10 @@ const Home = () => {
                     <button type="submit">Log In</button>
                 </form>
                 <div onClick={closeSignInMenu}>
-                    <p>Don't have an account? Create one! <Link to='/user'>Create User Profile</Link></p>
+                    <p>Don't have an account? Create one! <Link to='/CreateUser'>Create User Profile</Link></p>
                 </div>
                 <div>
-                    <p>View some of our cutest more adorbs gram posts here!<Link to="/gram">Meow!</Link></p>
+                    <p>View some of our cutest more adorbs gram posts here!<Link to="/CreateGram">Meow!</Link></p>
                 </div>
             </div>
         </div>
