@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { createUser, updateUser } from '../../actions/users';
 
@@ -29,7 +30,7 @@ const User = ({currentId, setCurrentId}) => {
     };
 
     return(
-        <div>
+        <div className="user">
             <h1>This is the user form</h1>
             <form onSubmit={handleSubmit}>
                 <input 
@@ -69,6 +70,9 @@ const User = ({currentId, setCurrentId}) => {
                 />  
                 <button type="submit" value="submit">Submit</button>
             </form>
+            <div>
+                <Link to='/'>Return</Link>
+            </div>
         </div>
     )
 };

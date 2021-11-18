@@ -10,7 +10,7 @@ import App from './App';
 const store = createStore(reducers, compose(applyMiddleware(thunk)));
 
 ReactDOM.render(
-    // Using Provider to have react-redux in our program
+    //Using Provider to have react-redux in our program
     <Provider store={store}>
         <App />
     </Provider>, 

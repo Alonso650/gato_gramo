@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { createGram, updateGram } from '../../actions/grams'
 
@@ -38,7 +39,7 @@ const CreateGram = ({ currentId, setCurrentId }) => {
 
     // the rest of the code is the visuals for the creating gram entry 
     return(
-        <div>
+        <div className="gram">
             <h1>This is the Create Gram Form</h1>
             <form onSubmit={handleSubmit}>
             <input 
@@ -54,6 +55,9 @@ const CreateGram = ({ currentId, setCurrentId }) => {
             />
             <button type="submit" value="submit">Submit</button>
             </form>
+            <div>
+                <Link to='/'>Return</Link>
+            </div>
         </div>
     )
 };
