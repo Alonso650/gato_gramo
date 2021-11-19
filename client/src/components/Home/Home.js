@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
-    const [click, setClick] = useState(false);
+    // const [click, setClick] = useState(false);
 
-    const closeSignInMenu = () => setClick(false);
+    // const closeSignInMenu = () => setClick(false);
 
     return(
         <div>
@@ -20,7 +20,8 @@ const Home = () => {
                     </div>
                     <button type="submit">Log In</button>
                 </form>
-                <div onClick={closeSignInMenu}>
+                {/* <div onClick={closeSignInMenu}> */}
+                <div>
                     <p>Don't have an account? Create one! <Link to='/CreateUser'>Create User Profile</Link></p>
                 </div>
                 <div>
