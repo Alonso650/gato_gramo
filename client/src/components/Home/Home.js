@@ -1,10 +1,8 @@
 // import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import User from '../User/User.js';
 
 const Home = () => {
-    // const [click, setClick] = useState(false);
-
-    // const closeSignInMenu = () => setClick(false);
 
     return(
         <div>
@@ -22,11 +20,15 @@ const Home = () => {
                 </form>
                 {/* <div onClick={closeSignInMenu}> */}
                 <div>
-                    <p>Don't have an account? Create one! <Link to='/CreateUser'>Create User Profile</Link></p>
+                    <p>Don't have an account? Create one! <Link to='/UserForm'>Create User Profile</Link></p>
                 </div>
                 <div>
                     <p>View some of our cutest more adorbs gram posts here!<Link to="/CreateGram">Meow!</Link></p>
                 </div>
+                {/* <div>
+                    <p>View the profile created here <Link to='/User'>user Profile info</Link></p>
+                </div> */}
+                <User />
             </div>
         </div>
     )

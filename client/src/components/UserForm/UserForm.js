@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { createUser, updateUser } from '../../actions/users';
 
-const User = ({currentId, setCurrentId}) => {
+const UserForm = ({currentId, setCurrentId}) => {
     const [userData, setUserData] = useState({ username: '', pw: '', firstName: '', lastName: '', email: '', selectedImage: ''});
-    const user = useSelector((state) => (currentId ? state.users.find((gram) => gram._id === currentId) : null));
+    const user = useSelector((state) => currentId ? state.users.find((u) => u._id === currentId) : null);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -13,20 +13,23 @@ const User = ({currentId, setCurrentId}) => {
     }, [user]);
 
     
-    const clear = () => {
-        setCurrentId(0);
-        setUserData({ username: '', pw: '', firstName: '', lastName: '', email: '', selectedImage: ''});
+    
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if(currentId){
+            dispatch(updateUser(currentId, userData));
+            // clear();
+        }else{
+            dispatch(createUser(userData));
+            //clear();
+        }
+        clear();
     };
 
-    const handleSubmit = async(error) => {
-        error.preventDefault();
-        if(currentId === 0){
-            dispatch(createUser(userData));
-            clear();
-        }else{
-            dispatch(updateUser(currentId, userData));
-            clear();
-        }
+    const clear = () => {
+        setCurrentId = null;
+        setUserData({ username: '', pw: '', firstName: '', lastName: '', email: '', selectedImage: ''});
     };
 
     return(
@@ -75,9 +78,9 @@ const User = ({currentId, setCurrentId}) => {
                 <div>
                     <input 
                         type="password" 
-                        value={userData.password} 
+                        value={userData.pw} 
                         placeholder="Password"
-                        onChange={(e) => setUserData({...userData, password: e.target.value })}
+                        onChange={(e) => setUserData({...userData, pw: e.target.value })}
                     />
                 </div> 
                   
@@ -90,4 +93,4 @@ const User = ({currentId, setCurrentId}) => {
     )
 };
 
-export default User;
+export default UserForm;

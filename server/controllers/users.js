@@ -21,7 +21,7 @@ export const createUser = async(req, res) => {
 }
 
 // Get all users route (debating if still need this route)
-export const getAllUsers = async(req, res) => {
+export const getUsers = async(req, res) => {
     try {
         const allUsers = await pool.query("SELECT * FROM users");
         res.json(allUsers.rows);
@@ -31,18 +31,18 @@ export const getAllUsers = async(req, res) => {
 }
 
 // Get specific user
-export const getUser = async(req, res) => {
-    try {
-        const { userId } = req.params;
-        const selectUser = await pool.query(
-            "SELECT * FROM users WHERE users_id = $1",
-            [userId]
-        );
-        res.json(selectUser.rows[0]);
-    } catch (error) {
-        console.error(error.message);
-    }
-}
+// export const getUser = async(req, res) => {
+//     try {
+//         const { userId } = req.params;
+//         const selectUser = await pool.query(
+//             "SELECT * FROM users WHERE users_id = $1",
+//             [userId]
+//         );
+//         res.json(selectUser.rows[0]);
+//     } catch (error) {
+//         console.error(error.message);
+//     }
+// }
 
 // Update user information
 export const updateUser = async(req, res) => {
