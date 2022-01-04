@@ -1,6 +1,4 @@
-// import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import User from '../User/User.js';
 
 const Home = () => {
 
@@ -18,17 +16,16 @@ const Home = () => {
                     </div>
                     <button type="submit">Log In</button>
                 </form>
-                {/* <div onClick={closeSignInMenu}> */}
                 <div>
-                    <p>Don't have an account? Create one! <Link to='/UserForm'>Create User Profile</Link></p>
+                    <p>Don't have an account? Create one! <Link to='/add'>Create User Profile</Link></p>
                 </div>
                 <div>
                     <p>View some of our cutest more adorbs gram posts here!<Link to="/CreateGram">Meow!</Link></p>
                 </div>
-                {/* <div>
-                    <p>View the profile created here <Link to='/User'>user Profile info</Link></p>
-                </div> */}
-                <User />
+                <div>
+                    <p>View the profile created here <Link to='/users'>user Profile info</Link></p>
+                </div>
+                
             </div>
         </div>
     )

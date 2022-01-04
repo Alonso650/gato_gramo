@@ -1,13 +1,12 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-
-import userRoutes from './routes/users.js';
-import gramRoutes from './routes/grams.js';
-
- 
+const express = require("express");
 const app = express();
-dotenv.config();
+const cors = require("cors");
+
+var corsOptions = {
+    origin: "http://localhost:8081"
+};
+ 
+// dotenv.config();
 
 // Using this sends images and they can be large also
 // or a limit size of 30mb
@@ -17,12 +16,39 @@ app.use(express.urlencoded({ limit: "30mb", extended: true}));
 // middleware
 app.use(cors());
 
-app.use('/users', userRoutes);
-app.use('/grams', gramRoutes);
 
-app.listen(5000, () =>{
-    console.log("server has started on port 5000");
+const db = require("./models");
+// const Role = db.role;
+
+// db.sequelize.sync({force: true}).then(() => {
+//     console.log("Drop and Resync Db");
+//     initial();
+// });
+
+
+db.sequelize.sync();
+app.get("/", (req, res) => {
+    res.json({message: "Bienvendio"});
 });
 
+require("./routes/user.routes")(app);
+// require("./routes/user.routes")(app);
+// require("./routes/auth.routes")(app);
 
 
+
+// helps create 3 rows in database
+// function initial(){
+//     Role.create({
+//         id: 1,
+//         name: "user"
+//     });
+
+//     Role.create({
+//         id: 2,
+//         name: "admin"
+//     });
+// }
+app.listen(8080, () =>{
+    console.log("server has started on port 5000");
+});

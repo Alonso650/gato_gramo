@@ -1,96 +1,124 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { createUser, updateUser } from '../../actions/users';
+import React, { useState } from "react";
+import UserDataService from "../../user.service";
 
-const UserForm = ({currentId, setCurrentId}) => {
-    const [userData, setUserData] = useState({ username: '', pw: '', firstName: '', lastName: '', email: '', selectedImage: ''});
-    const user = useSelector((state) => currentId ? state.users.find((u) => u._id === currentId) : null);
-    const dispatch = useDispatch();
 
-    useEffect(() => {
-        if(user) setUserData(user);
-    }, [user]);
-
-    
-    
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if(currentId){
-            dispatch(updateUser(currentId, userData));
-            // clear();
-        }else{
-            dispatch(createUser(userData));
-            //clear();
-        }
-        clear();
+const UserForm = () => {
+    const initialUserState = {
+        id: null,
+        username: "",
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: ""
     };
 
-    const clear = () => {
-        setCurrentId = null;
-        setUserData({ username: '', pw: '', firstName: '', lastName: '', email: '', selectedImage: ''});
+    const [user, setUser] = useState(initialUserState);
+    const [submitted, setSubmitted] = useState(false);
+    
+    const handleInputChange = Event => {
+        const {name, value } = Event.target;
+        setUser({ ...user, [name]: value });
+    };
+
+    const saveUser = () => {
+        var data = {
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            password: user.password
+        };
+
+        UserDataService.create(data)
+            .then(response => {
+                setUser({
+                    id: response.data.id,
+                    username: response.data.username,
+                    firstName: response.data.firstName,
+                    lastName: response.data.lastName,
+                    email: response.data.email,
+                    password: response.data.password
+                });
+                console.log(response.data);
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    };
+
+    const newUser = () => {
+        setUser(initialUserState);
     };
 
     return(
-        <div className="user">
-            <h1>Create a Profile and Join Us...(meow)</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <input 
-                        type="text" 
-                        value={userData.firstName}
-                        placeholder="First Name"
-                        onChange={(e) =>setUserData({...userData, firstName: e.target.value })}
-                    />
-                </div>
-                <div>
-                    <input 
-                        type="text" 
-                        value={userData.lastName} 
-                        placeholder="Last Name"
-                        onChange={(e) => setUserData({...userData, lastName: e.target.value })}
-                    />
-                </div>
-                <div>
-                    <input 
-                        type="text" 
-                        value={userData.username}
-                        placeholder="User Name"
-                        onChange={(e) => setUserData({...userData, username: e.target.value })}
-                    />
-                </div>
-                <div>
-                    <input 
-                        type="email" 
-                        value={userData.email} 
-                        placeholder="Email"
-                        onChange={(e) => setUserData({...userData, email: e.target.value })}
-                    />
-                </div>
-                <div>
-                    <input 
-                        type="file" 
-                        value={userData.selectedImage}
-                        onChange={(e) => setUserData({...userData, selectedImage: e.target.value })}
-                    /> 
-                </div>
-                <div>
-                    <input 
-                        type="password" 
-                        value={userData.pw} 
-                        placeholder="Password"
-                        onChange={(e) => setUserData({...userData, pw: e.target.value })}
-                    />
-                </div> 
-                  
-                <button type="submit" value="submit">Submit</button>
-            </form>
+        <div>
+            {submitted ? (
             <div>
-                <Link to='/'>Return</Link>
+                <h4>You submitted successfully</h4>
+                <button onClick={newUser}>Add </button>
             </div>
+            ) : (
+                <div>
+                <div>
+                    <label htmlFor="username">Username</label>
+                    <input
+                    type="text"
+                    id="username"
+                    required
+                    value={user.username}
+                    onChange={handleInputChange}
+                    name="username"
+                    />
+                </div>
+                <div>
+                    <label htmlFor="firstName">First Name</label>
+                    <input
+                    type="text"
+                    id="firstName"
+                    required
+                    value={user.firstName}
+                    onChange={handleInputChange}
+                    name="firstName"
+                    />
+                </div>
+                <div>
+                    <label htmlFor="lastName">Last Name</label>
+                    <input
+                    type="text"
+                    id="lastName"
+                    required
+                    value={user.lastName}
+                    onChange={handleInputChange}
+                    name="lastName"
+                    />
+                </div>
+                <div>
+                    <label htmlFor="email">Email</label>
+                    <input
+                    type="email"
+                    id="email"
+                    required
+                    value={user.email}
+                    onChange={handleInputChange}
+                    name="email"
+                    />
+                </div>
+                <div>
+                    <label htmlFor="password">Password</label>
+                    <input
+                    type="password"
+                    id="password"
+                    required
+                    value={user.password}
+                    onChange={handleInputChange}
+                    name="password"
+                    />
+                </div>
+                <button onClick={saveUser}>Submit</button>
+            </div>
+            )}
         </div>
-    )
+    );
 };
 
 export default UserForm;

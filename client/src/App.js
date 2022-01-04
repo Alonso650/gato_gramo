@@ -1,33 +1,28 @@
-import React, { useState } from 'react';
-// this will be used for switching different routes
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import CreateGram from './components/Gram/CreateGram';
-import UserForm from './components/UserForm/UserForm';
-import User from './components/User/User';
+import React, { Component } from 'react';
+import { Routes, Route } from "react-router-dom";
 
-import ViewGram from './components/Gram/ViewGram';
-import Home from './components/Home/Home';
+import Home from "./components/Home/Home";
+import UserForm from "./components/UserForm/UserForm";
+import User from "./components/User/User";
+import UsersList from "./components/UsersList/UsersList";
 
+class App extends Component{
+    
+    render(){
+        return (
+            <div>
 
-const App = () => {
-    const [currentId, setCurrentId] = useState('');
-    return(
-        <>
-            {/* Everything must be inside a router to be able to swtich to 
-            different routes */}
-            <Router>
                 <div>
-                <Routes>
-                    <Route path='/' element={<Home/>}></Route>
-                    <Route path='/UserForm'  element={<UserForm currentId={currentId} setCurrentId={setCurrentId}/>}></Route>
-                    <Route path='/CreateGram' element={<CreateGram/>}></Route>
-                    <Route path='/ViewGram' element={<ViewGram/>}></Route>
-                    <Route path='/User' element={<User setCurrentId={setCurrentId}/>}></Route>
-                </Routes>
+                    <Routes>
+                        <Route exact path="/" element={<Home />}/>
+                        <Route exact path={"/users"} element={<UsersList />}/>
+                        <Route exact path="/add" element={<UserForm/>} />
+                        <Route path="/users/:id" element={<User/>} />
+                    </Routes>
                 </div>
-            </Router>
-        </>
-    );
+            </div>
+        );
+    }
 }
 
 export default App;
