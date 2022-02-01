@@ -4,7 +4,7 @@ import UserDataService from "../../user.service";
 
 const UserForm = () => {
     const initialUserState = {
-        id: null,
+        user_id: null,
         username: "",
         firstName: "",
         lastName: "",
@@ -22,6 +22,7 @@ const UserForm = () => {
 
     const saveUser = () => {
         var data = {
+            user_id: user.user_id,
             username: user.username,
             firstName: user.firstName,
             lastName: user.lastName,
@@ -32,7 +33,7 @@ const UserForm = () => {
         UserDataService.create(data)
             .then(response => {
                 setUser({
-                    id: response.data.id,
+                    user_id: response.data.user_id,
                     username: response.data.username,
                     firstName: response.data.firstName,
                     lastName: response.data.lastName,

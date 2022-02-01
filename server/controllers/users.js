@@ -4,23 +4,26 @@ const User = db.users;
 //Look up what this does the Seqelize.Op
 const Op = db.Sequelize.Op;
 
+//var jwt = require("jsonwebtoken");
+var bcrypt = require("bcryptjs");
+
 // Create and save a user
 exports.create = (req, res) => {
     
     // Validate request
     if(!req.body.username){
-        res.status(400).send({
-            message: "Content can not be empty"
-        });
-        return;
+        return res.status(400).send({ message: "Content cannot be empty"});
     }
+
 
     // Create a User
     const user = {
+        user_id: req.body.user_id,
         username: req.body.username,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        password: req.body.password,
+        // incrypts the password
+        password: bcrypt.hashSync(req.body.password, 8),
         email: req.body.email
     };
 
@@ -28,17 +31,45 @@ exports.create = (req, res) => {
     User.create(user)
         .then(data => {
             res.send(data);
+            console.log("Created user: " + JSON.stringify(user));
         })
         .catch(error => {
-            res.status(500).send({
-                message:
-                  error.message || "Some error occurred while creating the user"
-            });
+            res.status(500).send({ message: error.message });
         });
 };
 
+exports.signin = (req, res) => {
+    User.findOne({
+        where: {
+            username: req.body.username
+        }
+    })
+      .then(user => {
+          if(!user){
+              return res.status(404).send({ message: "User Not Found"});
+          }
 
-// Retrieve all Tutorials from the database.
+          var passwordIsValid = bcrypt.compareSync(
+              req.body.password,
+              user.password
+          );
+
+          if(!passwordIsValid){
+              return res.status(401).send({
+                  accessToken: null,
+                  message: "Invalid Password!"
+              });
+          }
+      })
+       .catch(error => {
+           res.status(500).send({ message: error.message });
+       })
+}
+
+
+
+
+// Retrieve all Users from the database.
 exports.findAll = (req, res) => {
     const username = req.query.username;
     var condition = username ? { username: {[Op.iLike]: `%${username}%`}} : null;
@@ -48,59 +79,48 @@ exports.findAll = (req, res) => {
             res.send(data);
         })
         .catch(error => {
-            res.status(500).send({
-                message:
-                    error.message || "Some error occurred while retrieving users"
-            });
+            res.status(500).send({ message: error.message });
         });
 };
 
 // Find a single User with an id
 exports.findOne = (req, res) => {
-    const id = req.params.id;
+    const id = req.params.user_id;
 
     User.findByPk(id)
         .then(data => {
             if(data){
                 res.send(data);
             } else{
-                res.status(404).send({
-                    message: `Cannot find User with id=${id}.`
-                });
+                res.status(404).send({ message: `Cannot find User with id=${id}.` });
             }
         })
         .catch(error => {
-            res.status(500).send({
-                message: "Error retrieving User with id =" + id
-            });
+            res.status(500).send({ message: error.message || "Error retrieving User with id =" + id });
     });
 };
 
+
 // Update user 
 exports.update = (req, res) => {
-    const id = req.params.id;
+    const id = req.params.user_id;
 
     User.update(req.body, {
         where: {id: id}
     })
        .then(num =>{
            if(num == 1){
-               res.send({
-                   message: "User was updated"
-               });
+               res.send({ message: "User was updated" });
            } else {
-               res.send({
-                   message: `Cannot update User with id=${id}`
-               });
+               res.send({ message: `Cannot update User with id=${id}` });
            }
        })
        .catch(error => {
-           res.status(500).send({
-               message: "Error updating User with id=" + id
-           });
+           res.status(500).send({ message: error.message || "Error updating User with id=" + id });
     });
 }
-// Update a Tutorial with the specified id in the request
+
+// Delete a user 
 exports.delete = (req, res) => {
     const id = req.params.id;
 
@@ -109,19 +129,13 @@ exports.delete = (req, res) => {
     })
         .then(num => {
             if(num == 1){
-                res.send({
-                    message: "User deleted succesfully"
-                });
+                res.send({ message: "User deleted succesfully" });
             } else {
-                res.send({
-                    message: "Cannot delete user"
-                });
+                res.send({ message: "Cannot delete user" });
             }
         })
         .catch(error => {
-            res.status(500).send({
-                message: "Could not delete user with id=" + id
-            });
+            res.status(500).send({ message: error.message || "Could not delete user with id=" + id });
         });
 };
 
@@ -135,9 +149,6 @@ exports.deleteAll = (req, res) => {
             res.send({ message: `${nums} Users were deleted successfully`});
         })
         .catch(error => {
-            res.status(500).send({
-                message:
-                   error.message || "Some error occurred while removing all tutorials"
-            });
+            res.status(500).send({ message: error.message || "Some error occurred while removing all tutorials" });
         });
 };
