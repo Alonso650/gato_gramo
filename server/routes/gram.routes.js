@@ -7,13 +7,13 @@ module.exports = app => {
 
     router.get("/:id", grams.getOne);
 
-    router.getAll("/", grams.getAll);
+    router.get("/", grams.getAll);
 
-    router.update("/:id", grams.update);
+    router.put("/:id", grams.update);
 
     router.delete("/:id", grams.delete);
     
-    router.delelteAll("/", grams.deleteAll);
+    //router.delete("/", grams.deleteAll);
 
     app.use('/grams', router);
 };

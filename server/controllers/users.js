@@ -4,7 +4,6 @@ const User = db.users;
 //Look up what this does the Seqelize.Op
 const Op = db.Sequelize.Op;
 
-//var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 
 // Create and save a user
@@ -122,7 +121,7 @@ exports.update = (req, res) => {
 
 // Delete a user 
 exports.delete = (req, res) => {
-    const id = req.params.id;
+    const id = req.params.user_id;
 
     User.destroy({
         where: {id: id}

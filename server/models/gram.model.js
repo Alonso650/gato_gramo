@@ -26,4 +26,4 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     return Gram;
-}
+};

@@ -29,9 +29,9 @@ db.users = require("./user.model.js")(sequelize, Sequelize);
 db.grams = require("./gram.model.js")(sequelize, Sequelize);
 
 // setting up the relationships between the grams and users
-db.users.hasMany(db.grams, {as: "grams"});
+//db.users.hasMany(db.grams, {as: "gram"});
 db.grams.belongsTo(db.users, {
-    foreignKey: "userId",
+    foreignKey: "user_Id",
     as: "user"
 });
 module.exports = db;

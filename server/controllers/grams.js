@@ -1,11 +1,11 @@
 const db = require("../models");
 const Gram = db.grams;
-const User = db.users;
+//const User = db.user;
 
 // Op stands for symbol operators
 const Op = db.Sequelize.Op;
 
-// these are basically SQL queries getting created onto the database
+// SQL queries getting created onto the database
 exports.create = (req, res) => {
 
     if(!req.body.title){
@@ -17,14 +17,16 @@ exports.create = (req, res) => {
 
     // Creating the Gram
     const gram = {
+        gram_id: req.body.gram_id,
         title: req.body.title,
         description: req.body.description,
-        user_id: req.body.user_id
+        //user_id: req.body.user_id
     };
 
     Gram.create(gram)
         .then(data =>{
             res.send(data);
+            console.log("Created gram entry: " + JSON.stringify(gram));
         })
         .catch(error =>{
             res.status(500).send({
@@ -33,29 +35,15 @@ exports.create = (req, res) => {
             });
         });
 };
-// exports.createGram = (userId, gram) => {
-//     return Gram.create({
-//         gram_id: gram.gram_id,
-//         title: gram.title,
-//         description: gram.description,
-//         userId: userId
-//     })
-//        .then((gram) => {
-//            console.log("Created gram: " + JSON.stringify(gram));
-//            return gram;
-//        })
-//        .catch((err) => {
-//            console.log("Error while creating gram: ", err);
-//        });
-// };
+
 
 
 // Update entry
 exports.update = (req, res) => {
-    const id = req.params.id;
+    const id = req.params.gram_id;
 
     Gram.update(req.body, {
-        where: {id: id}
+        where: {gram_id: id}
     })
         .then(num =>{
             if(num == 1){
@@ -64,7 +52,7 @@ exports.update = (req, res) => {
                 });
             } else{
                 res.send({
-                    message: `Error when updating Gram id=${id}`
+                    message: `Error when updating Gram id=${gram_id}`
                 });
             }
         })
@@ -78,10 +66,10 @@ exports.update = (req, res) => {
 
 // delete gram entry
 exports.delete = (req, res) => {
-    const id = req.params.id;
+    const id = req.params.gram_id;
 
     Gram.destroy({
-        where: {id: id}
+        where: {gram_id: id}
     })
         .then(num => {
             if(num == 1){
@@ -99,5 +87,59 @@ exports.delete = (req, res) => {
                 message:
                     error.message || "Some error occurred while deleting entry"
             });
+        });
+}
+
+// exports.deleteAll = (req, res) => {
+//     Gram.destroy({
+//         where: {},
+//         truncate: false
+//     })
+//         .then(nums => {
+//             res.send({ 
+//                 message: `${nums} Grams were deleted `
+//             })
+//         })
+// }
+
+exports.getAll = (req, res) => {
+    //const user_id = req.params.user_id;
+    const title = req.params.title;
+    Gram.findAll({ 
+        where: {
+            title,
+        //    user_id: user_id
+        },
+        include: [ 
+            {model: User, as: 'user'}
+        ]
+    })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(error => {
+            res.status(500).send({
+                message:
+                    error.message || "Some error occured when searching all gram posts"
+            });
+        });
+}
+
+exports.getOne = (req, res) =>{
+    const id = req.params.gram_id;
+
+    Gram.findByPk(id)
+        .then(data => {
+            if(data){
+                res.send(data);
+            }else{
+                res.status(400).send({
+                    message:`Cannot find gram with id =${id}`});
+                }
+            })
+        .catch(error => {
+            res.status(500).send({
+                message:
+                    error.message || "Error retrieving Gram id with = "+ id });
         });
 }
