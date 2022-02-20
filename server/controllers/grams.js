@@ -6,8 +6,8 @@ const Gram = db.grams;
 const Op = db.Sequelize.Op;
 
 // SQL queries getting created onto the database
+//exports.create = async (req, res) => {
 exports.create = (req, res) => {
-
     if(!req.body.title){
         res.status(400).send({
             message: "Content cannot be empty"
@@ -20,6 +20,9 @@ exports.create = (req, res) => {
         gram_id: req.body.gram_id,
         title: req.body.title,
         description: req.body.description,
+        imageType: req.file.mimetype,
+        imageName: req.file.originalname,
+        imageData: req.file.buffer
         //user_id: req.body.user_id
     };
 
@@ -102,8 +105,8 @@ exports.delete = (req, res) => {
 //         })
 // }
 
-exports.getAll = (req, res) => {
-    //const user_id = req.params.user_id;
+ exports.getAll = (req, res) => {
+//exports.getAll = async (req, res) =>{
     const title = req.params.title;
     Gram.findAll({ 
         where: {
@@ -114,8 +117,15 @@ exports.getAll = (req, res) => {
             {model: User, as: 'user'}
         ]
     })
-        .then(data => {
-            res.send(data);
+        // .then(data => {
+        //     res.send(data);
+        // })
+        .then(grams =>{
+            grams.map(gram => {
+                const gramImage = gram.imageData.toString('base64')
+                gram['imageData'] = gramImage
+            });
+            res.send(grams);
         })
         .catch(error => {
             res.status(500).send({

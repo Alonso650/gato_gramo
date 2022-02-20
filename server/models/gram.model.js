@@ -13,6 +13,15 @@ module.exports = (sequelize, DataTypes) => {
         description:{
             type: DataTypes.STRING,
             allowNull: false,
+        },
+        imageType:{
+            type: DataTypes.STRING
+        },
+        imageName:{
+            type: DataTypes.STRING
+        },
+        imageData:{
+            type: DataTypes.BLOB('long')
         }
         /* other data to put into model:
             - Gender

@@ -1,10 +1,14 @@
 const db = require("../models");
+const config = require("../config/auth.config");
 const User = db.users;
+const RefreshToken = db.refreshToken;
 
-//Look up what this does the Seqelize.Op
+// Op is used for operators example like greater than
+// or less than, etc.
 const Op = db.Sequelize.Op;
 
 var bcrypt = require("bcryptjs");
+var jwt = require("jsonwebtoken");
 
 // Create and save a user
 exports.create = (req, res) => {
@@ -43,12 +47,12 @@ exports.signin = (req, res) => {
             username: req.body.username
         }
     })
-      .then(user => {
+      .then(async (user) => {
           if(!user){
               return res.status(404).send({ message: "User Not Found"});
           }
 
-          var passwordIsValid = bcrypt.compareSync(
+          const passwordIsValid = bcrypt.compareSync(
               req.body.password,
               user.password
           );
@@ -59,12 +63,67 @@ exports.signin = (req, res) => {
                   message: "Invalid Password!"
               });
           }
+          var token = jwt.sign({ id: user.id }, config.secret, {
+              expiresIn: config.jwtExpiration
+          });
+          let refreshToken = await RefreshToken.createToken(user);
+
+          res.status(200).send({
+              user_id: user.user_id,
+              username: user.username,
+              email: user.email,
+              accessToken: refreshToken,
+
+          });
+
       })
        .catch(error => {
            res.status(500).send({ message: error.message });
-       })
-}
+       });
+};
 
+// get the refresh token from request token
+// get the refreshToken object {id, user, token, expiryDate } from raw
+// token using refreshToken model static method
+// verify the token (expired or not) basing on expiryDate field
+// if refresh token was expired, remove it from database and return message
+// cont. using user id field of refreshToken object as paramter to generate new
+// access token using jsonwebtoken library
+// return { new accesstoken, refreshtoken } if everything is done
+// or send error message
+exports.refreshToken = async (req, res) => {
+    const { refreshToken: requestToken } = req.body;
+    if(requestToken == null){
+        return res.status(403).JSON({ message: "Refresh Token is required!"});
+    }
+    try{
+        let refreshToken = await RefreshToken.findOne({ where: { token: requestToken }});
+        console.log(refreshToken);
+        if(!refreshToken){
+            res.status(403).JSON({ message: "Refresh token is not in database"});
+            return;
+        }
+        if(RefreshToken.verifyExpiration(refreshToken)){
+            RefreshToken.destroy({ where: { id: refreshToken.id }});
+
+            res.status(403).JSON({
+                message: "Refresh token was expired. Please make a new singin request"
+            });
+            return;
+        }
+
+        const user = await refreshToken.getUser();
+        let newAccessToken = jwt.sign({ id: user.id }, config.secret, {
+            expiresIn: config.jwtExpiration,
+        });
+        return res.status(200).JSON({
+            accessToken: newAccessToken,
+            refreshToken: refreshToken.token,
+        });
+    } catch (error){
+        return res.status(500).send({ message: error });
+    }
+};
 
 
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
-import UserDataService from "../../user.service";
+//import UserDataService from "../../user.service";
+import UserDataService from "../../services/user.service";
 
 const User = props => {
     const initialUserState = {
@@ -40,7 +41,7 @@ const User = props => {
         UserDataService.update(currentUser.id, currentUser)
             .then(response => {
                 console.log(response.data);
-                setMessage("The tutorial was updated successfully");
+                setMessage("The user was updated successfully");
             })
             .catch(e => {
                 console.log(e);

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import UserDataService from "../../user.service";
+import UserDataService from "../../services/user.service";
 
 
 const UserForm = () => {
