@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { Routes, Route } from "react-router-dom";
 
 import Login from "./components/Login/Login";
@@ -15,9 +15,9 @@ class App extends Component{
                 <div>
                     <Routes>
                         <Route exact path="/" element={<Login />}/>
-                        <Route exact path={"/users"} element={<UsersList />}/>
-                        <Route exact path="/add" element={<UserForm/>} />
-                        <Route path="/users/:id" element={<User/>} />
+                        <Route exact path={"/user"} element={<UsersList />}/>
+                        <Route exact path="/user/createuser" element={<UserForm/>} />
+                        <Route path="/user/:id" element={<User/>} />
                     </Routes>
                 </div>
             </div>

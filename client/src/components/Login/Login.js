@@ -4,8 +4,8 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 // checkButton is used to verify if the form validation is successfull or not
 import CheckButton from "react-validation/build/button";
-import { isEmail } from "validator";
-import AuthService from "../../services/auth.services";
+//import { isEmail } from "validator";
+import UserService from "../../services/user.service";
 
 const required = (value) => {
     if(!value){
@@ -18,15 +18,18 @@ const required = (value) => {
     }
 };
 
-const email = (value) => {
-    if(!validator.isEmail(value)){
-        return `${value} is not a valid email.`
-    }
-};
+// const email = (value) => {
+//     if(!validator.isEmail(value)){
+//         return `${value} is not a valid email.`
+//     }
+// };
 
 
 const Login = (props) => {
-    // need to check what useRef does
+    // useRef = built in hook that accepts one argument as
+    // initial value and returns a reference
+    // since its empty it will set the obects current property to
+    // undefined (using it to access DOM elements)
     const form = useRef();
     const checkBtn = useRef();
 
@@ -52,7 +55,7 @@ const Login = (props) => {
         form.current.validateAll();
         // need to check what is current.context._errors.length
         if(checkBtn.current.context._errors.length === 0){
-            AuthService.login(username, password).then(
+            UserService.login(username, password).then(
                 ()=> {
                     props.history.push("/profile");
                     window.location.reload();
@@ -78,12 +81,52 @@ const Login = (props) => {
                 <Form onSubmit={handleLogic} ref={form}>
                     <div className="form-group">
                         <label htmlFor = "username">Username</label>
+                        <Input 
+                          type="text"
+                          className="form-control"
+                          name="username"
+                          value={username}
+                          onChange={onChangeUsername}
+                          validations={[required]}
+                        />
                     </div>
+                    <div className="form-group">
+                        <label htmlFor="password">Password</label>
+                        <Input
+                          type="password"
+                          className="form-control"
+                          name="password"
+                          value={password}
+                          onChange={onChangePassword}
+                          validations={[required]}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <button disabled={loading}>
+                            {loading && (
+                                <span className="spinner-border spinner-border-sm"></span>
+                            )}
+                            <span>Login</span>
+                        </button>
+                    </div>
+                    {message && (
+                        <div className="form-group">
+                            <div className="alert alert-danger" role="alert">
+                                {message}
+                            </div>
+                        </div>
+                    )}
+                    <CheckButton style={{ display: "none" }} ref={checkBtn} />
                 </Form>
             </div>
+            <div>
+                <Link to={"/user/createuser"}>Create User</Link>
+            </div>
         </div>
-    )
-}
+    );
+};
+
+export default Login;
 // const Home = () => {
 
 //     return(

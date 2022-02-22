@@ -1,7 +1,7 @@
 const verifySignUp = require("../middleware/verifySignUp.js");
 
-module.exports = app => {
-    const users = require("../controllers/users.js");
+module.exports = (app) => {
+    const user = require("../controllers/users.js");
 
     var router = require("express").Router();
 
@@ -14,27 +14,28 @@ module.exports = app => {
     });
 
 
-    router.post("/refreshToken", users.refreshToken);
+    router.post("/refreshToken", user.refreshToken);
     // Create a new User
-    router.post("/", [verifySignUp.checkDuplicateUsernameOrEmail], users.create);
+    router.post("/createuser", [verifySignUp.checkDuplicateUsernameOrEmail], user.create);
 
     // Signin with a valid user account
-    router.post("/", users.signin);
+    //router.post("/", users.signin);
+    router.post("/login", user.signin);
 
     // Retrieve all Users
-    router.get("/", users.findAll);
+    router.get("/", user.findAll);
 
     // Retrieve a single user with Id
-    router.get("/:id", users.findOne);
+    router.get("/:id", user.findOne);
 
     // Update a single user with Id
-    router.put("/:id", users.update);
+    router.put("/edit/:id", user.update);
 
     // delete a single user with Id
-    router.delete("/:id", users.delete);
+    router.delete("/delete/:id", user.delete);
 
     // delete all users 
-    router.delete("/", users.deleteAll);
+    router.delete("/", user.deleteAll);
 
-    app.use('/users', router);
+    app.use('/user', router);
 };
