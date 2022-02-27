@@ -62,9 +62,9 @@ const UsersList = () => {
     };
 
     return(
-        <div>
-            <div>
-                <div>
+        <div className="list row">
+            <div className="col-md-8">
+                <div className="input-group mb-3">
                     <input
                     type="text"
                     placeholder="Search by username"
@@ -137,7 +137,7 @@ const UsersList = () => {
               {/* {currentUser.published ? "Published" : "Pending"} */}
             </div>
                         <Link
-                        to={"/users/" + currentUser.id}>Edit</Link>
+                        to={"/profile/" + currentUser.id}>Edit</Link>
                     </div>
                 ) : (
                     <div>

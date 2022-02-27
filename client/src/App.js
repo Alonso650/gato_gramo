@@ -1,28 +1,28 @@
-import React, { Component, useState, useEffect } from 'react';
+import React from 'react';
 import { Routes, Route } from "react-router-dom";
-
+import "bootstrap/dist/css/bootstrap.min.css";
 import Login from "./components/Login/Login";
 import UserForm from "./components/UserForm/UserForm";
-import User from "./components/User/User";
+import Profile from "./components/Profile/Profile";
 import UsersList from "./components/UsersList/UsersList";
+import IndexPage from './components/IndexPage/IndexPage';
 
-class App extends Component{
-    
-    render(){
+const App = () =>{
         return (
             <div>
 
                 <div>
                     <Routes>
                         <Route exact path="/" element={<Login />}/>
-                        <Route exact path={"/user"} element={<UsersList />}/>
-                        <Route exact path="/user/createuser" element={<UserForm/>} />
-                        <Route path="/user/:id" element={<User/>} />
+                        <Route exact path={"/allUsers"} element={<UsersList />}/>
+                        <Route exact path="/user/signup" element={<UserForm/>} />
+                        <Route path="/profile/:id" element={<Profile/>} />
+                        <Route path="/indexPage" element={<IndexPage />} />
                     </Routes>
                 </div>
             </div>
         );
-    }
-}
+//    }
+};
 
 export default App;

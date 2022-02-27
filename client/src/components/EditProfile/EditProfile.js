@@ -1,9 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from 'react-router-dom';
-//import UserDataService from "../../user.service";
-import UserDataService from "../../services/user.service";
-
-const User = props => {
+/*
+const EditProfile = props => {
     const initialUserState = {
         id: null,
         username: "",
@@ -134,4 +130,5 @@ const User = props => {
     );
 };
 
-export default User;
+export default EditProfile;
+*/

@@ -21,13 +21,11 @@ exports.create = (req, res) => {
 
     // Create a User
     const user = {
-        user_id: req.body.user_id,
         username: req.body.username,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         // incrypts the password
         password: bcrypt.hashSync(req.body.password, 8),
-       //password: req.body.password,
         email: req.body.email
     };
 
@@ -70,10 +68,11 @@ exports.signin = (req, res) => {
           let refreshToken = await RefreshToken.createToken(user);
 
           res.status(200).send({
-              user_id: user.user_id,
+              id: user.id,
               username: user.username,
               email: user.email,
-              accessToken: refreshToken,
+              accessToken: token,
+              refreshToken: refreshToken,
 
           });
 
@@ -142,16 +141,19 @@ exports.findAll = (req, res) => {
         });
 };
 
+
 // Find a single User with an id
 exports.findOne = (req, res) => {
-    const id = req.params.user_id;
+    const id = req.params.id;
 
     User.findByPk(id)
         .then(data => {
             if(data){
                 res.send(data);
             } else{
+                console.log(id);
                 res.status(404).send({ message: `Cannot find User with id=${id}.` });
+                console.log(id);
             }
         })
         .catch(error => {
@@ -162,7 +164,7 @@ exports.findOne = (req, res) => {
 
 // Update user 
 exports.update = (req, res) => {
-    const id = req.params.user_id;
+    const id = req.params.id;
 
     User.update(req.body, {
         where: {id: id}
@@ -181,7 +183,7 @@ exports.update = (req, res) => {
 
 // Delete a user 
 exports.delete = (req, res) => {
-    const id = req.params.user_id;
+    const id = req.params.id;
 
     User.destroy({
         where: {id: id}

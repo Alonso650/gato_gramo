@@ -1,28 +1,21 @@
-import { Link, renderMatches } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import React, { useState, useRef } from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 // checkButton is used to verify if the form validation is successfull or not
 import CheckButton from "react-validation/build/button";
-//import { isEmail } from "validator";
-import UserService from "../../services/user.service";
+import authService from '../../services/auth.service';
 
 const required = (value) => {
     if(!value){
-        // return(
-        //     <div>
-        //         This field is required!
-        //     </div>
-        // );
-        return 'require';
+        return(
+            <div className="alert alert-danger" role="alert">
+                This field is required!
+            </div>
+        );
     }
 };
 
-// const email = (value) => {
-//     if(!validator.isEmail(value)){
-//         return `${value} is not a valid email.`
-//     }
-// };
 
 
 const Login = (props) => {
@@ -52,10 +45,12 @@ const Login = (props) => {
         e.preventDefault();
         setMessage("");
         setLoading(true);
+        // validateAll: validates all controls by marking all controls
+        // as isUsed and isChanged
         form.current.validateAll();
-        // need to check what is current.context._errors.length
+        // access the authService.login when theres no errors found
         if(checkBtn.current.context._errors.length === 0){
-            UserService.login(username, password).then(
+            authService.login(username, password).then(
                 ()=> {
                     props.history.push("/profile");
                     window.location.reload();
@@ -120,42 +115,10 @@ const Login = (props) => {
                 </Form>
             </div>
             <div>
-                <Link to={"/user/createuser"}>Create User</Link>
+                <Link to={"/user/signup"}>Create User</Link>
             </div>
         </div>
     );
 };
 
 export default Login;
-// const Home = () => {
-
-//     return(
-//         <div>
-            
-//             <div>
-//             <h1>Welcome to Gato Gramo</h1>
-//                 <form>
-//                     <div>
-//                         <input type= "text" id= "signIn" placeholder="email"/>
-//                     </div>
-//                     <div>
-//                         <input type= "password" id= "password_signIn" placeholder="password"/>
-//                     </div>
-//                     <button type="submit">Log In</button>
-//                 </form>
-//                 <div>
-//                     <p>Don't have an account? Create one! <Link to='/add'>Create User Profile</Link></p>
-//                 </div>
-//                 <div>
-//                     <p>View some of our cutest more adorbs gram posts here!<Link to="/CreateGram">Meow!</Link></p>
-//                 </div>
-//                 <div>
-//                     <p>View the profile created here <Link to='/users'>user Profile info</Link></p>
-//                 </div>
-                
-//             </div>
-//         </div>
-//     )
-// };
-
-// export default Home;

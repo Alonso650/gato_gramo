@@ -7,8 +7,8 @@ const cors = require("cors");
 
 // Using this sends images and they can be large also
 // or a limit size of 30mb
-app.use(express.json({ limit: "30mb", extended: true}));
-app.use(express.urlencoded({ limit: "30mb", extended: true}));
+app.use(express.json({ extended: true}));
+app.use(express.urlencoded({ extended: true}));
 
 // middleware
 app.use(cors());

@@ -3,17 +3,13 @@ import authHeader from "./auth-header";
 
 class UserDataService{
     getAll(){
-        return http.get("/user");
+        return http.get("/user/allUsers");
     }
-
+    
     get(id){
-        return http.get(`/user/${id}`, { headers: authHeader() });
+        return http.get(`/user/${id}`)
     }
-
-    create(username, firstName, lastName, email, password){
-        return http.post("/user/createuser", {username, firstName, lastName, email, password});
-    }
-
+    
     update(id, data){
         return http.put(`/user/edit/${id}`, data);
     }
@@ -29,26 +25,6 @@ class UserDataService{
     findByUsername(username){
         return http.get(`/users/?username=${username}`);
     }
-
-    login(username, password){
-        return http.post("/", {
-            username, 
-            password,
-        })
-        .then((response) => {
-            if(response.data.accessToken){
-                localStorage.setItem("user", JSON.stringify(response.data));
-            }
-
-            return response.data;
-        });
-    }
-
-    logout(){
-        localStorage.removeItem("user");
-    }
-
-
 }
 
 export default new UserDataService();

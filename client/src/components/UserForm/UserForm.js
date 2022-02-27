@@ -5,7 +5,7 @@ import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
 
-import UserDataService from "../../services/user.service";
+import authService from "../../services/auth.service";
 
 
 const required = (value) => {
@@ -32,12 +32,11 @@ const validPassword = (value) => {
     }
 }
 
-const UserForm = () => {
+const UserForm = (props) => {
 
     const form = useRef();
     const checkBtn = useRef();
 
-    const [user_id, setUserId] = useState("");
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [ firstName, setFirstname] = useState("");
@@ -45,11 +44,6 @@ const UserForm = () => {
     const [ password, setPassword] = useState("");
     const [ successful, setSuccessFul] = useState(false);
     const [ message, setMessage] = useState("");
-
-    // const onChangeUserId = (e) => {
-    //     const user_id = e.target.value;
-    //     setUserId(user_id);
-    // }
 
     const onChangeUsername = (e) => {
         const username = e.target.value;
@@ -82,7 +76,7 @@ const UserForm = () => {
         setSuccessFul(false);
         form.current.validateAll();
         if (checkBtn.current.context._errors.length === 0){
-            UserDataService.create(username, firstName, lastName, email, password).then(
+            authService.create(username, firstName, lastName, email, password).then(
                 (response) =>{
                     setMessage(response.data.message);
                     setSuccessFul(true);
@@ -100,7 +94,6 @@ const UserForm = () => {
             );
         }
     };
-    
 
     return(
         <div>
@@ -164,7 +157,7 @@ const UserForm = () => {
                                 />
                             </div>
                             <div className="form-group">
-                                <button>Create Profile</button>
+                                <button >Create Profile</button>
                             </div>
                         </div>
                     )}

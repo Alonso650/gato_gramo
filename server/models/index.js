@@ -38,23 +38,23 @@ db.refreshToken = require("./refreshToken.model.js")(sequelize, Sequelize);
 // });
 // db.users.hasMany(db.grams, {
 //     through: "user_grams",
-//     foreignKey: "user_id",
-//     otherKey: "gram_id"
+//     foreignKey: "userId",
+//     otherKey: "gramId"
 // })
 
 db.grams.belongsTo(db.users, {
     through: "user_grams",
-    foreignKey: "gram_id",
-    otherKey: "user_id"
+    foreignKey: "gramId",
+    otherKey: "userId"
 
 })
 
 db.refreshToken.belongsTo(db.users, {
-    foreignKey: 'user_id', targetKey: 'user_id'
+    foreignKey: 'userId', targetKey: 'id'
 });
 
 db.users.hasOne(db.refreshToken, {
-    foreignKey: 'user_id', targetKey: 'user_id'
+    foreignKey: 'userId', targetKey: 'id'
 });
 
 module.exports = db;
