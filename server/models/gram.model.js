@@ -1,11 +1,11 @@
 module.exports = (sequelize, DataTypes) => {
     const Gram = sequelize.define("gram", {
-        gram_id:{
-            allowNull: false,
-            primaryKey: true,
-            autoIncrement: true,
-            type: DataTypes.INTEGER
-        },
+        // gram_id:{
+        //     allowNull: false,
+        //     primaryKey: true,
+        //     autoIncrement: true,
+        //     type: DataTypes.INTEGER
+        // },
         title:{
             type: DataTypes.STRING,
             allowNull: false,
@@ -14,15 +14,15 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        imageType:{
-            type: DataTypes.STRING
-        },
-        imageName:{
-            type: DataTypes.STRING
-        },
-        imageData:{
-            type: DataTypes.BLOB('long')
-        }
+        // imageType:{
+        //     type: DataTypes.STRING
+        // },
+        // imageName:{
+        //     type: DataTypes.STRING
+        // },
+        // imageData:{
+        //     type: DataTypes.BLOB('long')
+        // }
         /* other data to put into model:
             - Gender
             - photo file name? maybe allow adding multiple photos

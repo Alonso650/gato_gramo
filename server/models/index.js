@@ -25,12 +25,12 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.users = require("./user.model.js")(sequelize, Sequelize);
+db.user = require("./user.model.js")(sequelize, Sequelize);
 db.grams = require("./gram.model.js")(sequelize, Sequelize);
 db.refreshToken = require("./refreshToken.model.js")(sequelize, Sequelize);
-
+db.role = require("./role.model.js")(sequelize, Sequelize);
 // setting up the relationships between the grams and users
-//db.users.hasMany(db.grams, {as: "gram"});
+db.user.hasMany(db.grams, {as: "grams"});
 // db.grams.belongsTo(db.users, {
 //     through: "user_grams",
 //     foreignKey: "user_Id",
@@ -42,19 +42,34 @@ db.refreshToken = require("./refreshToken.model.js")(sequelize, Sequelize);
 //     otherKey: "gramId"
 // })
 
-db.grams.belongsTo(db.users, {
-    through: "user_grams",
-    foreignKey: "gramId",
+db.role.belongsToMany(db.user, {
+    through: "user_roles",
+    foreignKey: "roleId",
     otherKey: "userId"
+});
+
+db.user.belongsToMany(db.role, {
+    through: "user_roles",
+    foreignKey: "userId",
+    otherKey: "roleId"
+});
+
+
+db.grams.belongsTo(db.user, {
+    through: "user_grams",
+    foreignKey: "userId",
+    as: "user",
+    //otherKey: "userId"
 
 })
 
-db.refreshToken.belongsTo(db.users, {
-    foreignKey: 'userId', targetKey: 'id'
-});
+// db.refreshToken.belongsTo(db.users, {
+//     foreignKey: 'userId', targetKey: 'id'
+// });
 
-db.users.hasOne(db.refreshToken, {
-    foreignKey: 'userId', targetKey: 'id'
-});
+// db.users.hasOne(db.refreshToken, {
+//     foreignKey: 'userId', targetKey: 'id'
+// });
 
+db.ROLES = ["user", "admin"];
 module.exports = db;

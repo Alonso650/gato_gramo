@@ -1,10 +1,11 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import React, { useState, useRef } from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 // checkButton is used to verify if the form validation is successfull or not
 import CheckButton from "react-validation/build/button";
 import authService from '../../services/auth.service';
+
 
 const required = (value) => {
     if(!value){
@@ -17,12 +18,12 @@ const required = (value) => {
 };
 
 
-
 const Login = (props) => {
     // useRef = built in hook that accepts one argument as
     // initial value and returns a reference
     // since its empty it will set the obects current property to
     // undefined (using it to access DOM elements)
+    let navigate = useNavigate();
     const form = useRef();
     const checkBtn = useRef();
 
@@ -30,6 +31,7 @@ const Login = (props) => {
     const[password, setPassword] = useState("");
     const[loading, setLoading] = useState(false);
     const[message, setMessage] = useState("");
+
     
     const onChangeUsername = (e) => {
         const username = e.target.value;
@@ -52,7 +54,8 @@ const Login = (props) => {
         if(checkBtn.current.context._errors.length === 0){
             authService.login(username, password).then(
                 ()=> {
-                    props.history.push("/profile");
+                    navigate("/profile");
+
                     window.location.reload();
                 },
                 (error) => {
@@ -116,6 +119,9 @@ const Login = (props) => {
             </div>
             <div>
                 <Link to={"/user/signup"}>Create User</Link>
+            </div>
+            <div>
+                <Link to={"/indexPage"}>View some of our grams!</Link>
             </div>
         </div>
     );

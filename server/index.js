@@ -1,24 +1,31 @@
 const express = require("express");
+const db = require("./models");
+const flash = require("express-flash");
+
 const app = express();
+
+
+// cross-origin-resource sharing: http header-based system
+// allowing a server to specify any other origins (domain, scheme, or port)
+// from where a browser should enable resources to be loaded other
+// than its own
 const cors = require("cors");
 
- 
-// dotenv.config();
 
 // Using this sends images and they can be large also
 // or a limit size of 30mb
 app.use(express.json({ extended: true}));
-app.use(express.urlencoded({ extended: true}));
+app.use(express.urlencoded({ extended: false}));
+app.use(flash());
 
-// middleware
+
 app.use(cors());
 
-
-const db = require("./models");
 
 // db.sequelize.sync({force: true}).then(() => {
 //     console.log("Drop and Resync Db");
 // });
+
 
 
 db.sequelize.sync();
@@ -29,6 +36,7 @@ app.get("/", (req, res) => {
 require("./routes/user.routes")(app);
 require("./routes/gram.routes")(app);
 
+
 app.listen(8080, () =>{
-    console.log("server has started on port 5000");
+    console.log("server has started on port 8080");
 });

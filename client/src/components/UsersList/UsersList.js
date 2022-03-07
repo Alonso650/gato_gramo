@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import UserDataService from "../../services/user.service";
+
+import NavBar from '../NavBar/NavBar';
 import { Link } from "react-router-dom";
 
 const UsersList = () => {

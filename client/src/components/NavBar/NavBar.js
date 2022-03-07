@@ -1,39 +1,46 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
+import AuthService from "../../services/auth.service";
 import UserService from "../../services/user.service";
 
 const NavBar = () => {
     const [currentUser, setCurrentUser] = useState(undefined);
-    
-    const {id} = useParams();
-    const getUser = (id) => {
-        UserService.get(id)
-          .then(response => {
-              setCurrentUser(response.data);
-              console.log(response.data);
-          })
-          .catch(e => {
-              console.log(e);
-          });
-    };
-
+    const [showAdminBoard, setShowAdminBoard] = useState(false);
     useEffect(() => {
-        getUser(id);
-    }, [id]);
+        const user = AuthService.getCurrentUser();
+        if(user){
+            setCurrentUser(user);
+            setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
+        }
+    }, [])
 
-    const logout = () =>{
-        UserService.logout();
-    };
+    const logOut = () =>{
+        AuthService.logout();
+    }
 
     return(
         <div>
             <nav className="navbar navbar-expand navbar-dark bg-dark">
-                <div>
+                <div className="navbar-nav mr-auto">
                     <li className="nav-item">
                     <Link to={"/indexPage"} className="nav-link">
                         Cat Grams
                     </Link>
                     </li>
+                    {showAdminBoard &&(
+                        <li className="nav-item">
+                            <Link to={"/user/test/admin"} className="nav-link">
+                                Admin Board
+                            </Link>
+                        </li>
+                    )}
+                    {currentUser && (
+                        <li className="nav-item">
+                            <Link to={"/user/test/user"} className="nav-link">
+                                User
+                            </Link>
+                        </li>
+                    )}
                 </div>
                 {currentUser ? (
                     <div className="navbar-nav ml-auto">
@@ -43,9 +50,15 @@ const NavBar = () => {
                             </Link>
                         </li>
                         <li className="nav-item">
-                            <a href="/" className="nav-link" onClick={logout}>
+                            <a href="/" className="nav-link" onClick={logOut}>
                                 Log Out
                             </a>
+                        </li>
+                        {/* LINK TO CREATE GRAM BELOW MIGHT EDIT IT  */}
+                        <li className="nav-item">
+                            <Link to={"/createGram"} className="nav-link">
+                                Post a Gram
+                            </Link>
                         </li>
                     </div>
                 ) : (

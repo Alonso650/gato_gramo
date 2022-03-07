@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
@@ -21,7 +21,7 @@ const validEmail = (value) => {
 };
 
 const validUsername = (value) => {
-    if(value.length < 2 || value.length > 20){
+    if(value.length < 3 || value.length > 20){
         return "The username must be between 2 and 20 characters."
     }
 };
@@ -32,18 +32,23 @@ const validPassword = (value) => {
     }
 }
 
+
+
 const UserForm = (props) => {
 
     const form = useRef();
     const checkBtn = useRef();
+    let navigate = useNavigate();
 
     const [username, setUsername] = useState("");
+    const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState("");
     const [ firstName, setFirstname] = useState("");
     const [ lastName, setLastname] = useState("");
     const [ password, setPassword] = useState("");
     const [ successful, setSuccessFul] = useState(false);
     const [ message, setMessage] = useState("");
+
 
     const onChangeUsername = (e) => {
         const username = e.target.value;
@@ -80,6 +85,9 @@ const UserForm = (props) => {
                 (response) =>{
                     setMessage(response.data.message);
                     setSuccessFul(true);
+                    navigate("/");
+
+                    window.location.reload();
                 },
                 (error) => {
                     const resMessage = 
@@ -89,9 +97,12 @@ const UserForm = (props) => {
                         error.message ||
                         error.toString();
                     setMessage(resMessage);
+                    setLoading(false);
                     setSuccessFul(false);
                 }
             );
+        } else{
+            setLoading(false);
         }
     };
 
@@ -120,7 +131,6 @@ const UserForm = (props) => {
                                   name="firstName"
                                   value={firstName}
                                   onChange={onChangeFirstname}
-                                //  validations={required}
                                 />
                             </div>
                             <div className="form-group">
@@ -131,7 +141,6 @@ const UserForm = (props) => {
                                   name="lastName"
                                   value={lastName}
                                   onChange={onChangeLastname}
-                                 // validations={required}
                                 />
                             </div>
                             <div className="form-group">
@@ -157,7 +166,12 @@ const UserForm = (props) => {
                                 />
                             </div>
                             <div className="form-group">
-                                <button >Create Profile</button>
+                                <button  disabled={loading}>
+                                    {loading && (
+                                        <span className="spinner-border spinner-border-sm"></span>
+                                    )}
+                                    Create Profile
+                                </button>
                             </div>
                         </div>
                     )}

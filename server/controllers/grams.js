@@ -6,8 +6,8 @@ const Gram = db.grams;
 const Op = db.Sequelize.Op;
 
 // SQL queries getting created onto the database
-//exports.create = async (req, res) => {
-exports.create = (req, res) => {
+//exports.create = async (req, res, userId) => {
+exports.createGram = (req, res, userId) => {
     if(!req.body.title){
         res.status(400).send({
             message: "Content cannot be empty"
@@ -17,13 +17,13 @@ exports.create = (req, res) => {
 
     // Creating the Gram
     const gram = {
-        gram_id: req.body.gram_id,
+    //    gram_id: req.body.gram_id,
         title: req.body.title,
         description: req.body.description,
-        imageType: req.file.mimetype,
-        imageName: req.file.originalname,
-        imageData: req.file.buffer
-        //user_id: req.body.user_id
+     //   imageType: req.file.mimetype,
+     //   imageName: req.file.originalname,
+     //   imageData: req.file.buffer,
+        userId: userId,
     };
 
     Gram.create(gram)
@@ -38,6 +38,24 @@ exports.create = (req, res) => {
             });
         });
 };
+// exports.createGram = (userId, gram) =>{
+//     return Gram.create({
+//         gram_id: gram.gram_id,
+//         title: gram.title,
+//         description: gram.description,
+//         imageType: gram.imageType,
+//         imageName: gram.imageName,
+//         imageData: gram.imageData,
+//         userId: userId,
+//     })
+//      .then((gram) => {
+//          console.log(" Created Gram: " + JSON.stringify(gram));
+//          return gram;
+//      })
+//      .catch((error) => {
+//          console.log("Error while creating comment: ", error);
+//      });
+// };
 
 
 
@@ -136,7 +154,7 @@ exports.delete = (req, res) => {
 }
 
 exports.getOne = (req, res) =>{
-    const id = req.params.gram_id;
+    const id = req.params.id;
 
     Gram.findByPk(id)
         .then(data => {
@@ -153,3 +171,12 @@ exports.getOne = (req, res) =>{
                     error.message || "Error retrieving Gram id with = "+ id });
         });
 }
+// exports.getOne = (id) => {
+//     return Gram.findByPk(id, { include: ["user"]})
+//         .then((gram) => {
+//             return gram;
+//         })
+//         .catch((err) => {
+//             console.log("Error while finding gram: ", err);
+//         });
+// };

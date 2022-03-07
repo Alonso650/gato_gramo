@@ -1,9 +1,14 @@
+const grams = require("../controllers/grams.js");
+
+var router = require("express").Router();
+
+
 module.exports = app => {
-    const grams = require("../controllers/grams.js");
 
-    var router = require("express").Router();
 
-    router.post("/", grams.create);
+    
+
+    router.post("/createGram", grams.createGram);
 
     router.get("/:id", grams.getOne);
 

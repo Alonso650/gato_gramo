@@ -2,11 +2,12 @@ const verifySignUp = require("../middleware/verifySignUp.js");
 const user = require("../controllers/users.js");
 const authJwt = require("../middleware/authJwt.js");
 
-    var router = require("express").Router();
-module.exports = (app) => {
-    
+var router = require("express").Router();
 
-    router.use(function(req, res, next){
+    
+module.exports = (app) => {
+
+    app.use(function(req, res, next){
         res.header(
             "Access-Control-Allow-Headers",
             "x-access-token, Origin, Content-Type, Accept"
@@ -14,9 +15,15 @@ module.exports = (app) => {
         next();
     });
 
-    router.post("/refreshToken", user.refreshToken);
+    //router.post("/refreshToken", user.refreshToken);
+
     // Create a new User
-    router.post("/signup", [verifySignUp.checkDuplicateUsernameOrEmail], user.create);
+    router.post("/signup", [
+        verifySignUp.checkDuplicateUsernameOrEmail, 
+        verifySignUp.checkRolesExisted
+    ], 
+    user.create
+    );
 
     // Signin with a valid user account
     router.post("/login", user.signin);
@@ -37,5 +44,14 @@ module.exports = (app) => {
     // delete all users 
     router.delete("/", user.deleteAll);
 
+
+    router.get("/test/all", user.allAccess);
+
+    router.get("/test/user", [authJwt.verifyToken], user.userBoard);
+
+    router.get("/test/admin", [authJwt.verifyToken, authJwt.isAdmin], user.adminBoard);
+
     app.use('/user', router);
+
+
 };
