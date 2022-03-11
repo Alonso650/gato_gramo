@@ -10,8 +10,31 @@ const Op = db.Sequelize.Op;
 
 var bcrypt = require("bcryptjs");
 var jwt = require("jsonwebtoken");
+const { ROLES } = require("../models");
 
-// Create and save a user
+// Create and save a user using async
+// (async makes easier to write promises)
+exports.create = async (req, res) => {
+    try{
+        const _user = {
+            username: req.body.username,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            // incrypts the password
+            password: bcrypt.hashSync(req.body.password, 8),
+            email: req.body.email.toLowerCase(),
+        };
+    
+        const user = await User.create(_user);
+        res.send(user);
+        console.log("Created user: " + JSON.stringify(user));
+    } catch(err){
+        console.log("hit that catch promise");
+        res.status(500).send({ message: error.message });
+    }
+    
+};
+/*
 exports.create = (req, res) => {
     
     const user = {
@@ -25,7 +48,7 @@ exports.create = (req, res) => {
 
     User.create(user)
         .then(user => {
-   /*         if(req.body.roles){
+            if(req.body.roles){
                 Role.findAll({
                     where:{
                         name:{
@@ -42,7 +65,7 @@ exports.create = (req, res) => {
                 user.setRoles([1]).then(() => {
                     res.send({ message: "User was registered successfully!"});
                 });
-            } */
+            } 
              res.send(user);
              console.log("Created user: " + JSON.stringify(user));
         })
@@ -51,8 +74,8 @@ exports.create = (req, res) => {
             res.status(500).send({ message: error.message });
         });
 };
+*/
 
-// handeling the login logic
 exports.signin = (req, res) => {
     User.findOne({
         where: {

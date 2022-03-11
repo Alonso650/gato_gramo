@@ -1,13 +1,13 @@
 const db = require("../models");
-const Gram = db.grams;
-//const User = db.user;
+const Gram = db.gram;
+const User = db.user;
 
 // Op stands for symbol operators
 const Op = db.Sequelize.Op;
 
 // SQL queries getting created onto the database
 //exports.create = async (req, res, userId) => {
-exports.createGram = (req, res, userId) => {
+exports.createGram = (req, res) => {
     if(!req.body.title){
         res.status(400).send({
             message: "Content cannot be empty"
@@ -23,13 +23,27 @@ exports.createGram = (req, res, userId) => {
      //   imageType: req.file.mimetype,
      //   imageName: req.file.originalname,
      //   imageData: req.file.buffer,
-        userId: userId,
+    //    userId: userId,
     };
 
+    let user, grams;
     Gram.create(gram)
         .then(data =>{
             res.send(data);
             console.log("Created gram entry: " + JSON.stringify(gram));
+
+        })
+        .then(() => {
+            return User.findOne({ where: { username: User.username }});
+        })
+        .then((data) => {
+            user = data;
+            return Gram.findAll();
+        }).then((data) =>{
+            grams = data;
+            user.addGrams(grams);
+        }).then((data) =>{
+            console.log(data);
         })
         .catch(error =>{
             res.status(500).send({

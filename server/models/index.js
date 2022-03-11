@@ -26,11 +26,12 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.user = require("./user.model.js")(sequelize, Sequelize);
-db.grams = require("./gram.model.js")(sequelize, Sequelize);
+db.gram = require("./gram.model.js")(sequelize, Sequelize);
 db.refreshToken = require("./refreshToken.model.js")(sequelize, Sequelize);
 db.role = require("./role.model.js")(sequelize, Sequelize);
 // setting up the relationships between the grams and users
-db.user.hasMany(db.grams, {as: "grams"});
+db.user.hasMany(db.gram);
+db.gram.belongsTo(db.user);
 // db.grams.belongsTo(db.users, {
 //     through: "user_grams",
 //     foreignKey: "user_Id",
@@ -55,13 +56,13 @@ db.user.belongsToMany(db.role, {
 });
 
 
-db.grams.belongsTo(db.user, {
-    through: "user_grams",
-    foreignKey: "userId",
-    as: "user",
-    //otherKey: "userId"
+// db.grams.belongsTo(db.user, {
+//     through: "user_grams",
+//     foreignKey: "userId",
+//     as: "user",
+//     //otherKey: "userId"
 
-})
+// })
 
 // db.refreshToken.belongsTo(db.users, {
 //     foreignKey: 'userId', targetKey: 'id'

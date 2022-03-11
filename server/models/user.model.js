@@ -26,6 +26,6 @@ module.exports = (sequelize, DataTypes) => {
         // token:{
         //     type: DataTypes.STRING
         // }
-    });
+    }); 
     return User;
 };
