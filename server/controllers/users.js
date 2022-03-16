@@ -1,5 +1,6 @@
 const db = require("../models");
 const config = require("../config/auth.config");
+const Gram = db.gram;
 const User = db.user;
 const Role = db.role;
 const RefreshToken = db.refreshToken;
@@ -11,6 +12,26 @@ const Op = db.Sequelize.Op;
 var bcrypt = require("bcryptjs");
 var jwt = require("jsonwebtoken");
 const { ROLES } = require("../models");
+
+
+// exports.create = (user) => {
+//     return User.create({
+//         username: user.username,
+//         firstName: user.firstName,
+//         lastName: user.lastName,
+//         email: user.email,
+//         password: user.password,
+//     })
+//      .then((user) => {
+//          console.log("Created user " + JSON.stringify(user));
+//          //return user;
+//          //res.send(user);
+//      })
+//      .catch((err) => {
+//          console.log("Error: " + err);
+//      })
+// }
+
 
 // Create and save a user using async
 // (async makes easier to write promises)
@@ -29,11 +50,39 @@ exports.create = async (req, res) => {
         res.send(user);
         console.log("Created user: " + JSON.stringify(user));
     } catch(err){
-        console.log("hit that catch promise");
         res.status(500).send({ message: error.message });
     }
     
 };
+/*
+exports.create = async (req, res) => {
+
+    try{
+        //const { username, firstName, lastName, email, password, gram } = req.payload;
+        const _user = {
+            username: req.body.username,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            password: bcrypt.hashSync(req.body.password, 8),
+        }
+
+        // const user = await User.create({
+        //     _user
+        // }, {
+        //     include: [{
+        //         model: Gram,
+        //         as: 'gram',
+        //     }]
+        // });
+        const user = await User.create(_user);
+        res.send(user);
+        console.log("Create User: " + JSON.stringify(user));
+    } catch(e){
+        res.status(500).send({ message: e.message });
+    }
+};
+*/
 /*
 exports.create = (req, res) => {
     
@@ -192,37 +241,37 @@ exports.findAll = (req, res) => {
 
 
 // Find a single User with an id
-// exports.findOne = (req, res) => {
-//     const id = req.params.id;
-//     console.log("ID: " + id)
+exports.findOne = (req, res) => {
+    const id = req.params.id;
+    console.log("ID: " + id)
 
-//     User.findByPk(id)
-//         .then(data => {
-//             if(data){
-//                 res.send(data);
-//             } else{
-//                 console.log(id);
-//                 res.status(404).send({ message: `Cannot find User with id=${id}.` });
-//                 console.log(id);
-//             }
-//         })
-//         .catch(error => {
-//             res.status(500).send({ message: error.message || "Error retrieving User with id =" + id });
-//     });
-// };
-exports.findOne = (req, res, userId) => {
-    User.findByPk(userId, { include: ["grams"] })
+    User.findByPk(id)
         .then(data => {
             if(data){
                 res.send(data);
             } else{
-                res.status(404).send({ message: `Cannot find User with  id=${id}.` });
+                console.log(id);
+                res.status(404).send({ message: `Cannot find User with id=${id}.` });
+                console.log(id);
             }
         })
         .catch(error => {
             res.status(500).send({ message: error.message || "Error retrieving User with id =" + id });
-        });
+    });
 };
+// exports.findOne = (req, res, userId) => {
+//     User.findByPk(userId, { include: ["grams"] })
+//         .then(data => {
+//             if(data){
+//                 res.send(data);
+//             } else{
+//                 res.status(404).send({ message: `Cannot find User with  id=${id}.` });
+//             }
+//         })
+//         .catch(error => {
+//             res.status(500).send({ message: error.message || "Error retrieving User with id =" + id });
+//         });
+// };
 
 
 // Update user 

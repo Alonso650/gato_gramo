@@ -6,71 +6,51 @@ const User = db.user;
 const Op = db.Sequelize.Op;
 
 // SQL queries getting created onto the database
-//exports.create = async (req, res, userId) => {
-exports.createGram = (req, res) => {
-    if(!req.body.title){
-        res.status(400).send({
-            message: "Content cannot be empty"
-        });
-        return;
-    }
 
-    // Creating the Gram
-    const gram = {
-    //    gram_id: req.body.gram_id,
-        title: req.body.title,
-        description: req.body.description,
-     //   imageType: req.file.mimetype,
-     //   imageName: req.file.originalname,
-     //   imageData: req.file.buffer,
-    //    userId: userId,
-    };
+// function addToGram (user){
 
-    let user, grams;
-    Gram.create(gram)
-        .then(data =>{
-            res.send(data);
-            console.log("Created gram entry: " + JSON.stringify(gram));
-
-        })
-        .then(() => {
-            return User.findOne({ where: { username: User.username }});
-        })
-        .then((data) => {
-            user = data;
-            return Gram.findAll();
-        }).then((data) =>{
-            grams = data;
-            user.addGrams(grams);
-        }).then((data) =>{
-            console.log(data);
-        })
-        .catch(error =>{
-            res.status(500).send({
-                message:
-                    error.message || "Some error occurred while creating the gram entry"
-            });
-        });
+// }
+exports.createGram = async (req, res) =>{
+   try{
+   // const { userId, title, description } = req.payload;
+   const _gram = {
+       title: req.body.title,
+       description: req.body.description,
+       userId: req.body.userId,
+   }
+   
+       const gram = await Gram.create(_gram)
+       /*
+       const userIdFound = await User.findAll({
+           where: { userId: req.params.id }
+       })
+       console.log("User id found: " + userIdFound);
+       */
+       //gram.setUser(User.dataValues.id);
+       res.send(gram);
+       console.log("Gram was created: " + JSON.stringify(gram));
+       console.log(JSON.stringify(User));
+    //   console.log(req.User);
+   } catch(error){
+       res.status(500).send({ message: error.message });
+   }        
+//console.log("hi");
 };
+
 // exports.createGram = (userId, gram) =>{
 //     return Gram.create({
-//         gram_id: gram.gram_id,
 //         title: gram.title,
 //         description: gram.description,
-//         imageType: gram.imageType,
-//         imageName: gram.imageName,
-//         imageData: gram.imageData,
 //         userId: userId,
 //     })
 //      .then((gram) => {
-//          console.log(" Created Gram: " + JSON.stringify(gram));
+//          console.log("Created a gram: " + JSON.stringify(gram));
 //          return gram;
 //      })
-//      .catch((error) => {
-//          console.log("Error while creating comment: ", error);
-//      });
-// };
-
+//      .catch((err) => {
+//          console.log("ERror: " + err);
+//      })
+// }
 
 
 // Update entry

@@ -1,3 +1,6 @@
+const db = require("../models");
+const User = db.user;
+
 module.exports = (sequelize, DataTypes) => {
     const Gram = sequelize.define("gram", {
         // gram_id:{
@@ -8,12 +11,30 @@ module.exports = (sequelize, DataTypes) => {
         // },
         title:{
             type: DataTypes.STRING,
-            allowNull: false,
+        //    allowNull: false,
         },
         description:{
             type: DataTypes.STRING,
-            allowNull: false,
+         //   allowNull: false,
         },
+        // userId:{
+        //     type: DataTypes.INTEGER,
+        //     references: 'User',
+        //     referencesKey: 'id'
+        // }
+        /* trying something new here */
+        // userId:{
+        //     type: DataTypes.INTEGER,
+        //     references:{
+        //         model: User,
+
+        //         key: 'id'
+        //     },
+        //     //onDelete: 'CASCADE',
+        // }
+        // creatorId:{
+        //     type: DataTypes.INTEGER,
+        // }
         // imageType:{
         //     type: DataTypes.STRING
         // },
@@ -34,5 +55,10 @@ module.exports = (sequelize, DataTypes) => {
         */
     });
 
+    //Gram.associate = (models) => {
+        // Gram.belongsTo(User, {
+        //     foreignKey: 'userId',
+        // });
+    //}
     return Gram;
 };

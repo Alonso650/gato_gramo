@@ -30,8 +30,18 @@ db.gram = require("./gram.model.js")(sequelize, Sequelize);
 db.refreshToken = require("./refreshToken.model.js")(sequelize, Sequelize);
 db.role = require("./role.model.js")(sequelize, Sequelize);
 // setting up the relationships between the grams and users
-db.user.hasMany(db.gram);
-db.gram.belongsTo(db.user);
+db.user.hasMany(db.gram, { onDelete: 'CASCADE' }, {as: "gram",
+//    foreignKey: 'userId',
+//    sourceKey: "userId",
+});
+db.gram.belongsTo(db.user, { onDelete: 'CASCADE' }, {
+    foreignKey: "userId",
+    as: "user",
+  //  allowNull: "false",
+  //  sourceKey: "userId"
+});
+
+
 // db.grams.belongsTo(db.users, {
 //     through: "user_grams",
 //     foreignKey: "user_Id",
@@ -73,4 +83,6 @@ db.user.belongsToMany(db.role, {
 // });
 
 db.ROLES = ["user", "admin"];
+
+db.sequelize.sync();
 module.exports = db;

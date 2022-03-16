@@ -23,6 +23,10 @@ module.exports = (app) => {
         verifySignUp.checkRolesExisted
     ], 
     user.create
+    // function(req, res){
+    //     const _user = user.create(req.body);
+    //     res.send(_user);
+    // }
     );
 
     // Signin with a valid user account

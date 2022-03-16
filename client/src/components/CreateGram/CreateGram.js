@@ -13,10 +13,10 @@ const required = (value) => {
     }
 }
 
-const CreateGram = (userId) => {
-    const currentUser = authService.getCurrentUser();
+const CreateGram = () => {
+    //const currentUser = authService.getCurrentUser();
 
-    userId = currentUser.id;
+    //userId = currentUser.id;
     const form = useRef();
     const checkBtn = useRef();
     
@@ -43,7 +43,7 @@ const CreateGram = (userId) => {
         setSuccessFul(false);
         form.current.validateAll();
         if(checkBtn.current.context._errors.length === 0){
-            GramDataService.createGram(title, description, userId).then(
+            GramDataService.createGram(title, description).then(
                 (response) => {
                     setMessage(response.data.message);
                     setSuccessFul(true);
