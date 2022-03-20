@@ -14,27 +14,9 @@ var jwt = require("jsonwebtoken");
 const { ROLES } = require("../models");
 
 
-// exports.create = (user) => {
-//     return User.create({
-//         username: user.username,
-//         firstName: user.firstName,
-//         lastName: user.lastName,
-//         email: user.email,
-//         password: user.password,
-//     })
-//      .then((user) => {
-//          console.log("Created user " + JSON.stringify(user));
-//          //return user;
-//          //res.send(user);
-//      })
-//      .catch((err) => {
-//          console.log("Error: " + err);
-//      })
-// }
-
-
 // Create and save a user using async
 // (async makes easier to write promises)
+// router.post("/")
 exports.create = async (req, res) => {
     try{
         const _user = {
@@ -54,77 +36,8 @@ exports.create = async (req, res) => {
     }
     
 };
+
 /*
-exports.create = async (req, res) => {
-
-    try{
-        //const { username, firstName, lastName, email, password, gram } = req.payload;
-        const _user = {
-            username: req.body.username,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email,
-            password: bcrypt.hashSync(req.body.password, 8),
-        }
-
-        // const user = await User.create({
-        //     _user
-        // }, {
-        //     include: [{
-        //         model: Gram,
-        //         as: 'gram',
-        //     }]
-        // });
-        const user = await User.create(_user);
-        res.send(user);
-        console.log("Create User: " + JSON.stringify(user));
-    } catch(e){
-        res.status(500).send({ message: e.message });
-    }
-};
-*/
-/*
-exports.create = (req, res) => {
-    
-    const user = {
-        username: req.body.username,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        // incrypts the password
-        password: bcrypt.hashSync(req.body.password, 8),
-        email: req.body.email.toLowerCase(),
-    };
-
-    User.create(user)
-        .then(user => {
-            if(req.body.roles){
-                Role.findAll({
-                    where:{
-                        name:{
-                            [Op.or]: req.body.roles
-                        }
-                    }
-                }).then(roles => {
-                    user.setRoles(roles).then(() =>{
-                        res.send({ message: "User was registered successfully!"});
-                    });
-                });
-            } else { 
-                // user role = 1
-                user.setRoles([1]).then(() => {
-                    res.send({ message: "User was registered successfully!"});
-                });
-            } 
-             res.send(user);
-             console.log("Created user: " + JSON.stringify(user));
-        })
-        .catch(error => {
-            console.log("hit that catch promise");
-            res.status(500).send({ message: error.message });
-        });
-};
-*/
-
 exports.signin = (req, res) => {
     User.findOne({
         where: {
@@ -134,13 +47,13 @@ exports.signin = (req, res) => {
       .then((user) => {
           if(!user){
               return res.status(404).send({ message: "User Not Found"});
-          }
+           }
 
           var passwordIsValid = bcrypt.compareSync(
               req.body.password,
               user.password
           );
-
+ 
           if(!passwordIsValid){
               return res.status(401).send({
                   accessToken: null,
@@ -179,6 +92,34 @@ exports.signin = (req, res) => {
            res.status(500).send({ message: error.message });
        });
 };
+*/
+exports.signin = async(req, res) => {
+    const {username, password } = req.body;
+
+    const user = await User.findOne({ where: { username: username }});
+
+    if(!user) res.json({ error: "user doesn't exist" });
+
+    bcrypt.compare(password, user.password).then(async (match) => {
+        if(!match) res.json({ error: "wrong username and password combination" });
+
+        const accessToken = jwt.sign(
+            { username: user.username, id: user.id},
+            config.secret
+        );
+        res.status(200).send({
+            id: user.id,
+            username: user.username,
+           // email: user.email,
+            //roles: authorities,
+            token: accessToken
+        });
+        
+    });
+};
+
+
+
 
 // get the refresh token from request token
 // get the refreshToken object {id, user, token, expiryDate } from raw
@@ -259,19 +200,7 @@ exports.findOne = (req, res) => {
             res.status(500).send({ message: error.message || "Error retrieving User with id =" + id });
     });
 };
-// exports.findOne = (req, res, userId) => {
-//     User.findByPk(userId, { include: ["grams"] })
-//         .then(data => {
-//             if(data){
-//                 res.send(data);
-//             } else{
-//                 res.status(404).send({ message: `Cannot find User with  id=${id}.` });
-//             }
-//         })
-//         .catch(error => {
-//             res.status(500).send({ message: error.message || "Error retrieving User with id =" + id });
-//         });
-// };
+
 
 
 // Update user 
@@ -325,17 +254,3 @@ exports.deleteAll = (req, res) => {
             res.status(500).send({ message: error.message || "Some error occurred while removing all tutorials" });
         });
 };
-
-// EXTRA BELOW THIS LINE MIGHT DELETE AFTERWARDS
-exports.allAccess = (req, res) => {
-    res.status(200).send("Public Content.");
-};
-
-exports.userBoard = (req, res) => {
-    res.status(200).send("User Content");
-
-};
-
-exports.adminBoard = (req, res) => {
-    res.status(200).send("Admin Content");
-}

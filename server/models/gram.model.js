@@ -3,35 +3,20 @@ const User = db.user;
 
 module.exports = (sequelize, DataTypes) => {
     const Gram = sequelize.define("gram", {
-        // gram_id:{
-        //     allowNull: false,
-        //     primaryKey: true,
-        //     autoIncrement: true,
-        //     type: DataTypes.INTEGER
-        // },
         title:{
             type: DataTypes.STRING,
-        //    allowNull: false,
+            allowNull: false,
         },
         description:{
             type: DataTypes.STRING,
-         //   allowNull: false,
+            allowNull: false,
         },
-        // userId:{
-        //     type: DataTypes.INTEGER,
-        //     references: 'User',
-        //     referencesKey: 'id'
-        // }
-        /* trying something new here */
-        // userId:{
-        //     type: DataTypes.INTEGER,
-        //     references:{
-        //         model: User,
+        username:{
+            type: DataTypes.STRING,
+            allowNull: false,
+        }
 
-        //         key: 'id'
-        //     },
-        //     //onDelete: 'CASCADE',
-        // }
+
         // creatorId:{
         //     type: DataTypes.INTEGER,
         // }
@@ -54,11 +39,5 @@ module.exports = (sequelize, DataTypes) => {
 
         */
     });
-
-    //Gram.associate = (models) => {
-        // Gram.belongsTo(User, {
-        //     foreignKey: 'userId',
-        // });
-    //}
     return Gram;
 };

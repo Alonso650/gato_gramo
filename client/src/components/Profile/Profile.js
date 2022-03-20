@@ -1,74 +1,52 @@
+import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { useParams } from 'react-router-dom';
-import authService from "../../services/auth.service";
-import UserDataService from "../../services/user.service";
-import NavBar from "../NavBar/NavBar";
+import { useNavigate, useParams } from 'react-router-dom';
+
 
 
 const Profile = () => {
-    const currentUser = authService.getCurrentUser();
-    // const initialUserState = {
-    //     id: null,
-    //     username: "",
-    //     firstName: "",
-    //     email: "",
-    //     password: "",
-    // };
+    let { id } = useParams();
 
-    // const [currentUser, setCurrentUser] = useState(initialUserState);
-    // //const [message, setMessage] = useState("");
-    // const {id} = useParams();
-    // const getUser = (id) => {
-    //     UserDataService.get(id)
-    //       .then(response => {
-    //           setCurrentUser(response.data);
-    //           console.log(response.data);
-    //       })
-    //       .catch(e => {
-    //           console.log(e);
-    //       });
-    // };
+    let navigate = useNavigate();
+    const [username, setUsername] = useState("");
+    const [listOfGrams, setListOfGrams] = useState([]);
 
-    // useEffect(() => {
-    //     getUser(id);
-    // }, [id]);
+    useEffect(() => {
+        axios.get(`http://localhost:8080/user/${id}`).then((response) => {
+            setUsername(response.data.username);
+        });
+
+        axios.get(`http://localhost:8080/grams/byuserId/${id}`).then((response) => {
+            setListOfGrams(response.data);
+        });
+    }, []);
     
 
     return(
-        
-        <div className="container">
-            
-            {/* {currentUser ?  (  */}
-                <div>
-                    <NavBar />
-            <header>
-                <h3>
-                    <strong>{currentUser.username}</strong> Profile
-                </h3>
-            </header>
-             <p>
-                <strong>Token:</strong> {currentUser.accessToken.substring(0,20)} ...{" "}
-                {currentUser.accessToken.substr(currentUser.accessToken.length - 20)}
-            </p> 
-            <p>
-                <strong>Id:</strong> {currentUser.id}
-            </p>
-            <p>
-                <strong>Email:</strong> {currentUser.email}
-            </p>
-            <p>
-                <strong>First Name:</strong> {currentUser.firstName}
-                <strong>Last Name: </strong> {currentUser.lastName}
-            </p>
+        <div className="profilePageContainer">
+            <div className="basicInfo">
+                <h1>Username: {username}</h1>
             </div>
-          //  ) : (
-                <div>
-                <ul>
-        {currentUser.roles &&
-          currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}
-      </ul>
+            <div className="listOfGrams">
+                {listOfGrams.map((value, key) => {
+                    return(
+                        <div key={key} className="gram">
+                            <div classname="title">{value.title}</div>
+                        <div
+                           className="body"
+                           onClick={() => {
+                               navigate(`/gram/${value.id}`);
+                           }}
+                        >
+                            {value.description}
+                        </div>
+                    <div className="footer">
+                        <div className="username">{value.username}</div>
+                    </div>
                 </div>
-            {/* )}  */}
+                    );
+                })}
+            </div>
         </div>
     );
 };

@@ -22,16 +22,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         }
-        // },
-        // token:{
-        //     type: DataTypes.STRING
-        // }
     }); 
-    // User.associate = models => {
-    //     User.hasMany(models.Gram, {
-    //         foreignKey: 'userId',
-    //         as: 'gram',
-    //     });
-    // }
     return User;
 };

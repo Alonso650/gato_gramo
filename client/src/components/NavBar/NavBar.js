@@ -5,12 +5,12 @@ import UserService from "../../services/user.service";
 
 const NavBar = () => {
     const [currentUser, setCurrentUser] = useState(undefined);
-    const [showAdminBoard, setShowAdminBoard] = useState(false);
+    //const [showAdminBoard, setShowAdminBoard] = useState(false);
     useEffect(() => {
         const user = AuthService.getCurrentUser();
         if(user){
             setCurrentUser(user);
-            setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
+      //      setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
         }
     }, [])
 
@@ -27,13 +27,13 @@ const NavBar = () => {
                         Cat Grams
                     </Link>
                     </li>
-                    {showAdminBoard &&(
+                    {/* {showAdminBoard &&(
                         <li className="nav-item">
                             <Link to={"/user/test/admin"} className="nav-link">
                                 Admin Board
                             </Link>
                         </li>
-                    )}
+                    )} */}
                     {currentUser && (
                         <li className="nav-item">
                             <Link to={"/user/test/user"} className="nav-link">
