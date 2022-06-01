@@ -21,41 +21,34 @@ const sequelize = new Sequelize(
 const db = {};
 
 
-
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
+ 
+db.Grams = require("./Grams.js")(sequelize, Sequelize);
+db.Comments = require("./Comments.js")(sequelize, Sequelize);
+db.Users = require("./Users.js")(sequelize, Sequelize);
+db.Likes = require("./Likes.js")(sequelize, Sequelize);
 
-db.user = require("./user.model.js")(sequelize, Sequelize);
-db.gram = require("./gram.model.js")(sequelize, Sequelize);
-db.role = require("./role.model.js")(sequelize, Sequelize);
-
-// setting up the relationships between the grams and users
-db.user.hasMany(db.gram, { onDelete: 'CASCADE' }, {as: "gram",
-   foreignKey: 'userId',
-   sourceKey: "userId",
-});
-db.gram.belongsTo(db.user, { onDelete: 'CASCADE' }, {
-    foreignKey: "userId",
-    as: "user",
-   allowNull: "false",
-   sourceKey: "userId"
+// Defining associations
+db.Grams.hasMany(db.Comments, {onDelete: 'CASCADE' }, {
+   foreignKey: "GramId",
+   sourceKey: "GramId",
 });
 
-
-db.role.belongsToMany(db.user, {
-    through: "user_roles",
-    foreignKey: "roleId",
-    otherKey: "userId"
+db.Users.hasMany(db.Grams, {onDelete: 'CASCADE' }, {
+    foreignKey: "UserId",
+    sourceKey: "UserId"
 });
 
-db.user.belongsToMany(db.role, {
-    through: "user_roles",
-    foreignKey: "userId",
-    otherKey: "roleId"
-});
+db.Users.hasMany(db.Likes, {onDelete: 'CASCADE'}, {
+    foreignKey: "UserId",
+    sourceKey: "UserId"
+})
 
+db.Grams.hasMany(db.Likes, {onDelete: 'CASCADE'}, {
+    foreignKey: "GramId",
+    sourceKey: "GramId"
+})
 
-db.ROLES = ["user", "admin"];
-
-db.sequelize.sync();
+ 
 module.exports = db;
