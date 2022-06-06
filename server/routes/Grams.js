@@ -3,6 +3,27 @@ const router = express.Router()
 const { Grams, Likes } = require("../models");
 
 const { validateToken } = require("../middleware/AuthMiddleware");
+const multer = require("multer");
+
+var storage = multer.diskStorage({
+    filename: function(req, file, callback){
+        callback(null, Date.now() + file.originalname);
+    },
+
+    destination:(req, file, callback) => {
+        callback(null, './public/images/');
+    }
+});
+
+var imageFilter = function(req, file, callback){
+    if(!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)){
+        return callback(new Error("Only image files are allowed!"), false);
+    }
+    callback(null, true);
+};
+
+//var upload = upload({ storage: storage, fileFiler: imageFilter});
+
 
 router.get('/', validateToken, async (req, res) => {
     const listOfGrams = await Grams.findAll({include: [Likes]});
