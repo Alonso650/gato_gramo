@@ -1,27 +1,32 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Formik, Form, Field, ErrorMessage } from "formik"; 
 import { useNavigate } from "react-router-dom";
-import * as Yup from 'yup';
 import axios from "axios";
+import { useForm } from "react-hook-form";
 import { AuthContext } from "../helpers/AuthContext"
+import { validationSchema } from "../helpers/schema"
+import { yupResolver } from "@hookform/resolvers/yup"
 
 // imports for firebase
-import { storage } from "../firebase";
-import { ref, uploadBytes, listAll, getDownloadURL } from 'firebase/storage';
+// import { storage } from "../firebase";
+// import { ref, uploadBytes, listAll, getDownloadURL } from 'firebase/storage';
 // import used to create randomized letters
-import { v4 } from 'uuid';
+// import { v4 } from 'uuid';
+// import { Image } from "cloudinary-react"
 
 function CreateGram() {
     const navigate = useNavigate();
-    const [imageUpload, setImageUpload] = useState(null);
-    const [imageList, setImageList] = useState([]);
+    const [imageUpload, setImageUpload] = useState("");
 
     const { authState } = useContext(AuthContext);
-
-    const initialValues = {
+    const {register, handleSubmit, formState:{errors}} = useForm({
+      defaultValues:{
         title: "",
         gramText: "",
-    };
+      },
+      resolver: yupResolver(validationSchema),
+    });
+    
 
     // if no empty array then it would run infinitly 
     // causes the user to be redirected to the login page
@@ -30,74 +35,62 @@ function CreateGram() {
       if (!localStorage.getItem("accessToken")){
         navigate("/login");
       }
-
-      // lines of code involving images
-      listAll(imageListRef).then((response) => {
-        response.items.forEach((item) => {
-          getDownloadURL(item).then((url) => {
-            // the url gets added onto the end of the
-            // list of images
-            setImageList((prev) => [...prev, url])
-          })
-        })
-      });
     }, []);
 
-    const validationSchema = Yup.object().shape({
-        title: Yup.string().required("You must input a title"),
-        gramText: Yup.string().required("You must input a description"),
-    })
+    
 
-    const imageListRef = ref(storage, "images/");
 
     const uploadImage = () => {
-      if(imageUpload == null){
-        return;
-      }
-      // creating a reference to the storage in firebase
-      // the second argument is the path/name of the image file 
-      const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
-      
-      // 2 arguments: reference where to upload, image you want to upload
-      uploadBytes(imageRef, imageUpload).then((snapshot) => {
-        // snapshot.ref makes a reference to the image that was uploaded
-        // then it gets added onto the end of the list of images
-        getDownloadURL(snapshot.ref).then((url) => {
-          setImageList((prev) => [...prev, url])
-        })
-      });
-    }
+      // can hold the data 
+      const formData = new FormData();
+      formData.append("file", imageUpload);
+      formData.append("upload_preset", "uuulgr2b")
 
-    const onSubmit = (data) => {
+      axios.post("https://api.cloudinary.com/v1_1/alonso650/image/upload", formData).then((response) => {
+        console.log(response)
+      })
+    };
 
-        axios.post("http://localhost:3001/grams", data, { headers: {accessToken: localStorage.getItem("accessToken")},
+
+
+    const submitForm = (data) => {
+        axios.post("http://localhost:3001/grams", data, { 
+          headers: {
+            accessToken: localStorage.getItem("accessToken"),
+            // 'content-type': 'multipart/form-data',
+          },
       }).then((response) => {
-            navigate("/");
+         navigate("/");
         })
     }
 
   return (
-    <div className="createGramPage"> 
-        <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
-            <Form className="formContainer">
-                <label>Title:</label>
-                <ErrorMessage name="title" component="span"/>
-                <Field 
-                  id="inputCreateGram" 
-                  name="title" 
-                  placeholder="(Ex...Title)"
-                />
-                <label>Description:</label>
-                <ErrorMessage name="gramText" component="span"/>
-                <Field 
-                  id="inputCreateGram" 
-                  name="gramText" 
-                  placeholder="(Ex...Gram)"
-                />
+    <div className="createGramPage">
+      <form className="formContainer" 
+         onSubmit ={handleSubmit(submitForm)}>
+        
+        <label>Title:</label>
+        <input
+          id="title"
+          placeholder="(Ex..Title)"
+          {...register('title')}
+          />
 
-                <button type="submit">Create a Gram</button>
-            </Form>
-        </Formik>
+        <label>Description:</label>
+        <input
+          id="gramText"
+          placholder="(Ex...gramText)"
+          {...register('gramText')}
+        />
+        {/* <label>Image:</label>
+          <input
+            type="file"
+            onChange={(event) => {
+              setImageUpload(event.target.files[0]);
+            }}
+          /> */}
+        <button type="submit">Submit</button>
+        </form>
     </div>
   )
 }

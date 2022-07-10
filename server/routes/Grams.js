@@ -4,15 +4,16 @@ const { Grams, Likes } = require("../models");
 
 const { validateToken } = require("../middleware/AuthMiddleware");
 const multer = require("multer");
+const cloudinary = require('cloudinary');
 
 var storage = multer.diskStorage({
     filename: function(req, file, callback){
         callback(null, Date.now() + file.originalname);
     },
 
-    destination:(req, file, callback) => {
-        callback(null, './public/images/');
-    }
+    // destination:(req, file, callback) => {
+    //     callback(null, './public/images/');
+    // }
 });
 
 var imageFilter = function(req, file, callback){
@@ -22,7 +23,14 @@ var imageFilter = function(req, file, callback){
     callback(null, true);
 };
 
-//var upload = upload({ storage: storage, fileFiler: imageFilter});
+var upload = multer({ storage: storage, fileFiler: imageFilter});
+
+cloudinary.config({
+    cloud_name: 'alonso650',
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 
 
 router.get('/', validateToken, async (req, res) => {
@@ -48,15 +56,32 @@ router.get('/byuserId/:id', async (req, res) => {
     res.json(listOfGrams);
 })
 
-router.post("/", validateToken, async (req, res) => {
-    const gram = req.body;
-    // can access the username and user id 
-    // through the access token
-    gram.username = req.user.username;
-    gram.UserId = req.user.id;
-    await Grams.create(gram);
-    res.json(gram); 
-});
+// router.post("/", validateToken, async (req, res) => {
+//     const gram = req.body;
+//     // can access the username and user id 
+//     // through the access token
+//     gram.username = req.user.username;
+//     gram.UserId = req.user.id;
+//     await Grams.create(gram);
+//     res.json(gram); 
+// });
+
+// api request for post using cloudinary:
+router.post("/", validateToken, upload.single('image'),  async(req, res) => {
+    // cloudinary.v2.uploader.upload(req.file.path, async (err, result) => {
+    //     if(err){
+    //         return res.json(err);
+    //     }
+        const gram = req.body;
+        // gram.image = result.secure_url;
+        // gram.imageId = result.public_id;
+        gram.username = req.user.username;
+        gram.UserId = req.user.id;
+
+        await Grams.create(gram);
+        res.json(gram);
+    // })
+})
 
 router.put("/title", validateToken, async (req, res) => {
     const { newTitle, id } = req.body;
