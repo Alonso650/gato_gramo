@@ -28,6 +28,9 @@ function Login() {
 
   return (
     <div className="loginContainer">
+      <div>
+        <h1>Welcome to Gato-Gramo</h1>
+      </div>
       <label>Username:</label>
         <input type="text" 
           onChange={(event) => 

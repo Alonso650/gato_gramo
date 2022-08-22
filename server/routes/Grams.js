@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const router = express.Router()
 const { Grams, Likes } = require("../models");
@@ -16,12 +17,13 @@ var storage = multer.diskStorage({
     // }
 });
 
-var imageFilter = function(req, file, callback){
+const imageFilter = function(req, file, callback){
     if(!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)){
         return callback(new Error("Only image files are allowed!"), false);
     }
     callback(null, true);
 };
+
 
 var upload = multer({ storage: storage, fileFiler: imageFilter});
 
@@ -60,28 +62,53 @@ router.get('/byuserId/:id', async (req, res) => {
 //     const gram = req.body;
 //     // can access the username and user id 
 //     // through the access token
+//     console.log(req.files);
+//     //console.log(req.file);
+//     // console.log(req.body.file[0].name)
+//     /*
+//         THOUGHTS:
+//             MAYBE I CAN CHECK VIDEOS AND TEST HOW TO UPLOAD
+//             IMAGES FROM THE BACKEND FIRST THEN TRY THE FRONT END
+//             CAUSE THE BACKEND IS CERTINALIY(LOL) NOT WORKING 
+//             FOR FILES SPECIFICALLY
+//     */
 //     gram.username = req.user.username;
 //     gram.UserId = req.user.id;
 //     await Grams.create(gram);
 //     res.json(gram); 
 // });
 
-// api request for post using cloudinary:
-router.post("/", validateToken, upload.single('image'),  async(req, res) => {
-    // cloudinary.v2.uploader.upload(req.file.path, async (err, result) => {
-    //     if(err){
-    //         return res.json(err);
-    //     }
+router.post("/", upload.single('image'), (req, res) => {
+    cloudinary.v2.uploader.upload(req.file.path, async (err, result) =>{
         const gram = req.body;
-        // gram.image = result.secure_url;
-        // gram.imageId = result.public_id;
+
+        gram.file = result.secure_url;
+        gram.fileId = result.public_id;
+        // gram.file = req.file.filename;
+        // gram.fileId = req.file.size;
         gram.username = req.user.username;
         gram.UserId = req.user.id;
-
         await Grams.create(gram);
         res.json(gram);
-    // })
-})
+    })
+    //res.send(req.file);
+        /*
+            Maybe to store the name of the file i can use req.file.filename?
+            gram.fileName = req.file.filename??
+        */   
+});
+
+// api request for post using cloudinary:
+// router.post("/", validateToken, (req, res) => {
+//         const gram = req.body;
+//         gram.file = result.secure_url;
+//         gram.fileId = result.public_id;
+//         gram.username = req.user.username;
+//         gram.UserId = req.user.id;
+
+//         await Grams.create(gram);
+//         res.json(gram);
+// })
 
 router.put("/title", validateToken, async (req, res) => {
     const { newTitle, id } = req.body;

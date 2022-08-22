@@ -16,16 +16,28 @@ import { yupResolver } from "@hookform/resolvers/yup"
 
 function CreateGram() {
     const navigate = useNavigate();
-    const [imageUpload, setImageUpload] = useState("");
-
     const { authState } = useContext(AuthContext);
     const {register, handleSubmit, formState:{errors}} = useForm({
       defaultValues:{
-        title: "",
-        gramText: "",
+        // title: "",
+        // gramText: "",
+        file: "",
       },
       resolver: yupResolver(validationSchema),
     });
+
+    const [image, setImage] = useState('');
+
+    const convert2base64 = file =>{
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        setImage(reader.result.toString());
+      }
+
+      reader.readAsDataURL(file);
+    }
+    
     
 
     // if no empty array then it would run infinitly 
@@ -40,59 +52,81 @@ function CreateGram() {
     
 
 
-    const uploadImage = () => {
-      // can hold the data 
-      const formData = new FormData();
-      formData.append("file", imageUpload);
-      formData.append("upload_preset", "uuulgr2b")
+    // const uploadImage = () => {
+    //   // can hold the data 
+    //   const formData = new FormData();
+    //   formData.append("file", imageUpload);
+    //   formData.append("upload_preset", "uuulgr2b")
 
-      axios.post("https://api.cloudinary.com/v1_1/alonso650/image/upload", formData).then((response) => {
-        console.log(response)
-      })
-    };
+    //   axios.post("https://api.cloudinary.com/v1_1/alonso650/image/upload", formData).then((response) => {
+    //     console.log(response)
+    //   })
+    // };
 
 
 
     const submitForm = (data) => {
-        axios.post("http://localhost:3001/grams", data, { 
+        // const formData = new FormData();
+        // for(const key in data){
+        //   formData.append(key, data[key]);
+        // }
+
+
+        
+        // for(var pair of formData.entries()){
+        //   console.log(pair[1]);
+        // }
+        console.log(data);
+        convert2base64(data.files[0]);
+        
+        // formData.append("image", file);
+        // for(var pair of formData.entries()){
+        //   console.log(pair[0])
+        // }
+        // formData.append("data", data)
+        // console.log(formData)
+        axios.post("http://localhost:3001/grams", data,{ 
           headers: {
             accessToken: localStorage.getItem("accessToken"),
-            // 'content-type': 'multipart/form-data',
           },
       }).then((response) => {
          navigate("/");
         })
     }
 
+
+
+    
+
   return (
     <div className="createGramPage">
       <form className="formContainer" 
          onSubmit ={handleSubmit(submitForm)}>
         
-        <label>Title:</label>
+        {/* <label>Title:</label>
         <input
           id="title"
           placeholder="(Ex..Title)"
           {...register('title')}
-          />
+          /> */}
 
-        <label>Description:</label>
+        {/* <label>Description:</label>
         <input
           id="gramText"
           placholder="(Ex...gramText)"
           {...register('gramText')}
-        />
-        {/* <label>Image:</label>
+        /> */}
+        <label>Image:</label>
           <input
             type="file"
-            onChange={(event) => {
-              setImageUpload(event.target.files[0]);
-            }}
-          /> */}
-        <button type="submit">Submit</button>
+            {...register("file")}
+            id="file"
+          />
+        <input type="submit"/>
         </form>
     </div>
   )
+
 }
 
 export default CreateGram
