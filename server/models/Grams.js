@@ -1,13 +1,13 @@
 module.exports = (sequelize, DataTypes) => {
     const Grams = sequelize.define("Grams", {
-        // title: {
-        //     type: DataTypes.STRING,
-        //     allowNull: false,
-        // },
-        // gramText:{
-        //     type: DataTypes.STRING,
-        //     allowNull: false,
-        // },
+        title: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        gramText:{
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
         file:{
             type: DataTypes.STRING,
         },

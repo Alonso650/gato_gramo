@@ -11,10 +11,6 @@ var storage = multer.diskStorage({
     filename: function(req, file, callback){
         callback(null, Date.now() + file.originalname);
     },
-
-    // destination:(req, file, callback) => {
-    //     callback(null, './public/images/');
-    // }
 });
 
 const imageFilter = function(req, file, callback){
@@ -58,57 +54,21 @@ router.get('/byuserId/:id', async (req, res) => {
     res.json(listOfGrams);
 })
 
-// router.post("/", validateToken, async (req, res) => {
-//     const gram = req.body;
-//     // can access the username and user id 
-//     // through the access token
-//     console.log(req.files);
-//     //console.log(req.file);
-//     // console.log(req.body.file[0].name)
-//     /*
-//         THOUGHTS:
-//             MAYBE I CAN CHECK VIDEOS AND TEST HOW TO UPLOAD
-//             IMAGES FROM THE BACKEND FIRST THEN TRY THE FRONT END
-//             CAUSE THE BACKEND IS CERTINALIY(LOL) NOT WORKING 
-//             FOR FILES SPECIFICALLY
-//     */
-//     gram.username = req.user.username;
-//     gram.UserId = req.user.id;
-//     await Grams.create(gram);
-//     res.json(gram); 
-// });
 
-router.post("/", upload.single('image'), (req, res) => {
+router.post("/", upload.single('image'), validateToken, (req, res) => {
     cloudinary.v2.uploader.upload(req.file.path, async (err, result) =>{
         const gram = req.body;
 
+        // the result.secure_url represents the location of the image
+        // located in the cloudinary
         gram.file = result.secure_url;
         gram.fileId = result.public_id;
-        // gram.file = req.file.filename;
-        // gram.fileId = req.file.size;
         gram.username = req.user.username;
         gram.UserId = req.user.id;
         await Grams.create(gram);
         res.json(gram);
-    })
-    //res.send(req.file);
-        /*
-            Maybe to store the name of the file i can use req.file.filename?
-            gram.fileName = req.file.filename??
-        */   
+    })   
 });
-
-// api request for post using cloudinary:
-// router.post("/", validateToken, (req, res) => {
-//         const gram = req.body;
-//         gram.file = result.secure_url;
-//         gram.fileId = result.public_id;
-//         gram.username = req.user.username;
-//         gram.UserId = req.user.id;
-
-//         await Grams.create(gram);
-//         res.json(gram);
-// })
 
 router.put("/title", validateToken, async (req, res) => {
     const { newTitle, id } = req.body;
