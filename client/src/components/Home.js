@@ -81,7 +81,8 @@ function Home() {
                 navigate(`/gram/${value.id}`)
               }}
             >
-              {value.gramText}
+              {/* {value.gramText} */}
+              <img className="gramImage" src={value.image} alt="Gram Image"/>
             </div>
             <div className="footer">
               <div className="username">

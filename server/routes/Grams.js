@@ -61,8 +61,8 @@ router.post("/", upload.single('image'), validateToken, (req, res) => {
 
         // the result.secure_url represents the location of the image
         // located in the cloudinary
-        gram.file = result.secure_url;
-        gram.fileId = result.public_id;
+        gram.image = result.secure_url;
+        gram.imageId = result.public_id;
         gram.username = req.user.username;
         gram.UserId = req.user.id;
         await Grams.create(gram);

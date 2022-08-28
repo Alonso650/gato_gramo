@@ -92,6 +92,7 @@ function Gram() {
 
       setGramObject({...gramObject, gramText: newGramText})
     }
+    // maybe do the same thing but for images?
   };
   
   return (
@@ -109,13 +110,22 @@ function Gram() {
           </div>
           <div className="body"
             onClick={() => {
+              if(authState.username === gramObject.username){
+                editGram("body")
+              }
+            }}
+            >
+              <img className="gramImage" src={gramObject.image} alt="gato pic"/>
+            </div>
+          {/* <div className="body"
+            onClick={() => {
               if( authState.username === gramObject.username){
                 editGram("body")
               }
             }}
           >
-            {gramObject.gramText}{" "}
-          </div>
+             {gramObject.gramText}{" "} 
+          </div> */}
           <div className="footer">
             {gramObject.username} 
             { authState.username === gramObject.username && (

@@ -8,10 +8,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        file:{
+        image:{
             type: DataTypes.STRING,
         },
-        fileId:{
+        imageId:{
             type: DataTypes.STRING,
         },
         username:{
