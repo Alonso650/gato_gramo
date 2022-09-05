@@ -10,7 +10,7 @@ const { sign } = require("jsonwebtoken");
 router.post("/", checkDuplicateUsernameOrEmail, async(req, res) => {
     // Making this request in this matter because
     // we want to make changes to the password
-    // so we destructure it
+    // so we destructure it by 
     const { username, password, firstName, lastName, email } = req.body;
     bcrypt.hash(password, 10).then((hash) => {
         Users.create({

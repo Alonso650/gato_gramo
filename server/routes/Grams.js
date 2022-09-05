@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const router = express.Router()
 const { Grams, Likes } = require("../models");
-
 const { validateToken } = require("../middleware/AuthMiddleware");
 const multer = require("multer");
 const cloudinary = require('cloudinary');
@@ -37,6 +36,7 @@ router.get('/', validateToken, async (req, res) => {
     const likedGrams = await Likes.findAll({ where: { UserId: req.user.id} });
     res.json({listOfGrams: listOfGrams, likedGrams: likedGrams});
 });
+
 
 router.get('/byId/:id', async (req, res) => {
     const id = req.params.id;

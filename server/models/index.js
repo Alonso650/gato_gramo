@@ -29,7 +29,7 @@ db.Comments = require("./Comments.js")(sequelize, Sequelize);
 db.Users = require("./Users.js")(sequelize, Sequelize);
 db.Likes = require("./Likes.js")(sequelize, Sequelize);
 
-// Defining associations
+// Defining associations/relationships between tables 
 db.Grams.hasMany(db.Comments, {onDelete: 'CASCADE' }, {
    foreignKey: "GramId",
    sourceKey: "GramId",
