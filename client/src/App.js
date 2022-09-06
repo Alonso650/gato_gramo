@@ -26,6 +26,9 @@ function App() {
         accessToken: localStorage.getItem("accessToken"),
       },
     })
+    // if there is an error, setting the authorizing state to false,
+    // otherwise set the logged in person to the authorized person 
+    // with the username, id
     .then((response) => {
       if(response.data.error){
         setAuthState({...authState, status: false});

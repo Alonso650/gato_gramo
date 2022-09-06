@@ -29,16 +29,16 @@ function Login() {
   return (
     <div className="loginContainer">
       <div>
-        <h1>Welcome to Gato-Gramo</h1>
+        <h1 className="loginTitle"> Gato-Gramo</h1>
       </div>
-      <label>Username:</label>
-        <input type="text" 
+        <input type="text"
+          placeholder='Username' 
           onChange={(event) => 
             (setUsername(event.target.value)
           )}
         />
-      <label>Password:</label>
         <input type="password" 
+          placeholder='Password'
           onChange={(event) => 
             (setPassword(event.target.value)
           )}

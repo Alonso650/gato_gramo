@@ -1,6 +1,6 @@
 import React, { useContext }  from 'react'
 import axios from "axios";
-// allows to run a function when it rerenders
+// allows to run a function when it re-renders
 import { useEffect, useState } from "react";
 import {useNavigate, Link} from "react-router-dom";
 import PetsIcon from '@mui/icons-material/Pets';
@@ -18,15 +18,15 @@ function Home() {
     if(!localStorage.getItem("accessToken")){
       navigate('/login');
     } else {
-    axios.get("http://localhost:3001/grams",
-    { headers: { accessToken: localStorage.getItem('accessToken')}}
-    ).then((response) => {
-      setListOfGrams(response.data.listOfGrams);
-      setLikedGrams(response.data.likedGrams.map((like) => { 
-        return like.GramId
-      })
-      );
-    });
+      axios.get("http://localhost:3001/grams",{ 
+        headers: { accessToken: localStorage.getItem('accessToken')}}
+      ).then((response) => {
+        setListOfGrams(response.data.listOfGrams);
+        setLikedGrams(response.data.likedGrams.map((like) => { 
+          return like.GramId
+          })
+        );
+      });
     }
   },[]);
 
@@ -71,13 +71,14 @@ function Home() {
 
 
   return (
-    <div>
+    <div className="gridGram">
     {listOfGrams.map((value, key) => {
       return (
         <div key={key} className="gram">
           <div className="title">{value.title}</div>
             <div className="body"
               onClick={() => {
+                // When clicked on it will direct to the specific gram with the id
                 navigate(`/gram/${value.id}`)
               }}
             >
