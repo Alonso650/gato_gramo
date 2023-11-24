@@ -3,9 +3,9 @@ module.exports = {
     HOST: "localhost",
     USER: "postgres",
     PASSWORD: "turtle650",
-    DB: "gato-gramo",
+    DB: "postgres",
     dialect: "postgres",
-    PORT: 5432,
+    //PORT: 5432,
     pool:{
         // maximum number of connection in pool
         max: 5,

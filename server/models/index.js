@@ -30,25 +30,37 @@ db.Users = require("./Users.js")(sequelize, Sequelize);
 db.Likes = require("./Likes.js")(sequelize, Sequelize);
 
 // Defining associations/relationships between tables 
-db.Grams.hasMany(db.Comments, {onDelete: 'CASCADE' }, {
-   foreignKey: "GramId",
-   sourceKey: "GramId",
+db.Grams.hasMany(db.Comments,{ 
+   onDelete: 'CASCADE',
 });
 
-db.Users.hasMany(db.Grams, {onDelete: 'CASCADE' }, {
-    foreignKey: "UserId",
-    sourceKey: "UserId"
-});
-
-db.Users.hasMany(db.Likes, {onDelete: 'CASCADE'}, {
-    foreignKey: "UserId",
-    sourceKey: "UserId"
-})
-
-db.Grams.hasMany(db.Likes, {onDelete: 'CASCADE'}, {
+db.Comments.belongsTo(db.Grams,{
     foreignKey: "GramId",
-    sourceKey: "GramId"
-})
+});
+
+db.Users.hasMany(db.Grams,{
+    onDelete: 'CASCADE',
+});
+
+db.Grams.belongsTo(db.Users,{
+    foreignKey: "UserId",
+});
+
+db.Users.hasMany(db.Likes,{
+    onDelete: 'CASCADE',
+});
+
+db.Likes.belongsTo(db.Users,{
+    foreignKey: "UserId",
+});
+
+db.Grams.hasMany(db.Likes,{
+    onDelete: 'CASCADE',
+});
+
+db.Likes.belongsTo(db.Grams,{
+    foreignKey: "GramId",
+});
 
  
 module.exports = db;
