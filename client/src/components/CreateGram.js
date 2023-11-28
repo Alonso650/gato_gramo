@@ -35,10 +35,10 @@ function CreateGram(){
         "Content-Type": "multipart/form-data"
       },
       }).then((response) => {
-        console.log("File upload success");
+        console.log(response);
         navigate("/");
       })
-      .catch((err) =>alert("File upload error"))
+      .catch((err) =>alert("File upload error: " + err.message))
   };
 
   return(
@@ -46,31 +46,35 @@ function CreateGram(){
      <form className="formContainer" 
          onSubmit ={handleSubmit(submitForm)}>
         
-        <label>Title:</label>
+        {/* <label>Title:</label> */}
         <input
           id="title"
-          placeholder="(Ex..Title)"
           name="title"
+          placeholder="Title"
           {...register('title')}
           /> 
 
-         <label>Description:</label>
+         {/* <label>Description:</label> */}
         <input
           id="gramText"
+          placeholder="Description"
           name="gramText"
-          placholder="(Ex...gramText)"
           {...register('gramText')}
         />
         
-        <label>Image:</label>
-          <input
+        {/* <label>Image:</label> */}
+        <div>
+          <label>Image:</label>
+        <input
             type="file"
             name="image"
             {...register("image")}
             id="image"
           />
+        </div>
+          
 
-        <button type="submit">Submit</button>
+        <button type="submit">Create Gram</button>
       </form>
     </div>
   )

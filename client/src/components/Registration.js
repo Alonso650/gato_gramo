@@ -28,45 +28,50 @@ function Registration() {
   return (
     <div className="registrationPage">
       <form className="formContainer" onSubmit={handleSubmit(onSubmit)}>
-        <label>Username:</label>
+        <div>
+          <h2>Gato-Gramo</h2>
+          <h4>Sign up to see cat grams.</h4>
+          <hr/>
+        </div>
+        {/* <label>Username:</label> */}
           <input
             id="username"
-            placeholder="(Ex...CatFan123)"
+            placeholder="Username"
             name="username"
             {...register('username')}
           />
-        <label>First Name:</label>
+        {/* <label>First Name:</label> */}
           <input
             id="firstName"
-            placeholder="(Ex...Joe)"
+            placeholder="First Name"
             name="firstName"
             {...register('firstName')}
           />
 
-        <label>Last Name:</label>
+        {/* <label>Last Name:</label> */}
           <input
             id="lastName"
-            placeholder="(Ex...Smith)"
+            placeholder="Last Name"
             name="lastName"
             {...register('lastName')}
           />
-        <label>Email:</label>
+        {/* <label>Email:</label> */}
           <input
             id="email"
-            placeholder="(Ex....catfan@aol.com)"
+            placeholder="Email"
             name="email"
             type="email"
             {...register('email')}
           />
-        <label>Password:</label>
+        {/* <label>Password:</label> */}
           <input
             id="password"
-            placeholder="(Ex...secret word)"
+            placeholder="Password"
             name="password"
             type="password"
             {...register('password')}
           />
-        <button type="submit">Submit</button>
+        <button type="Submit">Sign Up</button>
       </form>
     </div>
   )

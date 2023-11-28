@@ -12,15 +12,24 @@ function Gram() {
 
   let navigate = useNavigate();
 
+  // made useEffect asynchronous and await is used to wait for each API call
+  // to complete. Included the id variable in the dependency array to trigger the effect
+  // when the id changes
   useEffect(() => {
-      axios.get(`http://localhost:3001/grams/byId/${id}`).then((response) => {
-        setGramObject(response.data);
-      });
+    const fetchData = async () => {
+      try {
+        const gramResponse = await axios.get(`http://localhost:3001/grams/byId/${id}`);
+        setGramObject(gramResponse.data);
 
-      axios.get(`http://localhost:3001/comments/${id}`).then((response) => {
-        setComments(response.data);
-      },[])
-  })
+        const commentsResponse = await axios.get(`http://localhost:3001/comments/${id}`);
+        setComments(commentsResponse.data);
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+    };
+
+    fetchData();
+  }, [id]);
 
   const addComment = () => {
     axios
