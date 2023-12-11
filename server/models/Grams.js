@@ -17,6 +17,19 @@ module.exports = (sequelize, DataTypes) => {
         username:{
             type: DataTypes.STRING,
             allowNull: false,
+        },
+        // adding adoption info
+        isAdopt:{
+            type: DataTypes.BOOLEAN,
+        },
+        adoptInfoGender:{
+            type: DataTypes.STRING,
+        },
+        adoptInfoLocation:{
+            type: DataTypes.STRING,
+        },
+        adoptInfoCatType:{
+            type: DataTypes.STRING,
         }
     });
     

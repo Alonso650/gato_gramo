@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useForm } from "react-hook-form";
@@ -8,11 +8,16 @@ import { yupResolver } from "@hookform/resolvers/yup"
 
 function CreateGram(){
   const navigate = useNavigate();
-  const {register, handleSubmit, formState:{errors}} = useForm({
+  const [isAdopt, setIsAdopt] = useState(false);
+  const {register, handleSubmit, formState:{errors, isDirty}} = useForm({
     defaultValues:{
       title: "",
       gramText: "",
       image: "",
+      isAdopt: "",
+      adoptInfoGender: "",
+      adoptInfoLocation: "",
+      adoptInfoCatType: "",
     },
     resolver: yupResolver(validationSchema),
   });
@@ -28,6 +33,11 @@ function CreateGram(){
     formData.append("image", data.image[0]);
     formData.append("gramText", data.gramText);
     formData.append("title", data.title);
+    // adoption info
+    formData.append("isAdopt", data.isAdopt);
+    formData.append("adoptInfoGender", data.adoptInfoGender);
+    formData.append("adoptInfoLocation", data.adoptInfoLocation);
+    formData.append("adoptInfoCatType", data.adoptInfoCatType);
 
     axios.post("http://localhost:3001/grams", formData,{ 
       headers: {
@@ -41,11 +51,39 @@ function CreateGram(){
       .catch((err) =>alert("File upload error: " + err.message))
   };
 
+  // const handleAdoptChanges = () => {
+  //   // If isAdopt changes, reset adoptinfo fields
+  //   if(!isDirty('isAdopt')){
+  //     register('adoptInfoCatType').setValue("");
+  //     register('adoptInfoGender').setValue("");
+  //     register('adoptInfoLocation').setValue("");
+  //   }
+  // };
+
+  const handleAdoptChange = (e) => {
+    setIsAdopt(e.target.value === 'true');
+  };
+
   return(
     <div className='createGramPage'>
      <form className="formContainer" 
          onSubmit ={handleSubmit(submitForm)}>
-        
+          <h1>Gram Creation</h1>
+        {/* Depending on what user answers will display adoption info */}
+
+        <label>Is this cat looking for a new home?</label>
+        <div>
+          
+            <select
+              {...register('isAdopt')}
+              onChange={handleAdoptChange}
+            >
+              <option value="">Select</option>
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+        </div>
+      
         {/* <label>Title:</label> */}
         <input
           id="title"
@@ -57,10 +95,13 @@ function CreateGram(){
          {/* <label>Description:</label> */}
         <input
           id="gramText"
+          type="text"
           placeholder="Description"
           name="gramText"
           {...register('gramText')}
         />
+
+        
         
         {/* <label>Image:</label> */}
         <div>
@@ -72,6 +113,30 @@ function CreateGram(){
             id="image"
           />
         </div>
+
+        {isAdopt && (
+          <>
+            <select name="catGender" id="adoptInfoGender" {...register('adoptInfoGender')}>
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+
+            <input
+              id="adoptInfoLocation"
+              placeholder="Enter location"
+              name="adoptInfoLocation"
+              {...register("adoptInfoLocation")}
+            />
+
+            <input
+              id="adoptInfoCatType"
+              placeholder="Cat Type"
+              name="adoptInfoCatType"
+              {...register("adoptInfoCatType")}
+            />
+          </>
+        )}
           
 
         <button type="submit">Create Gram</button>
