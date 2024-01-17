@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext"
+import PetsIcon from '@mui/icons-material/Pets';
+
 
 function Profile() {
     let  navigate  = useNavigate();
@@ -22,47 +24,44 @@ function Profile() {
     }, []);
     
 
-  return (
+    return (
       <div className="profilePageContainer">
-          <div className="basicInfo">
-              <h1>Username: {username}</h1>
-              {authState.username === username && (
-              <button onClick={() => {
-                navigate('/changepassword')
-              }}>
-                {" "}
-                Change my Password</button>
-              )}
-          </div>
-          <div className="listOfGrams">
-          <div>
-    {listOfGrams.map((value, key) => {
-        return (
-            <div key={key} className="gram" 
-              
-            >
-            <div className="title">{value.title}</div>
-            <div className="body"
-              onClick={() => {
-                navigate(`/gram/${value.id}`)
-              }}
-            >
-              {value.gramText}
-            </div>
-            <div className="footer">
-              <div className="username">{value.username}</div>
-              <div className="buttons">
-                  <label>{value.Likes.length}</label>
-              </div>
-            </div>
+        <div className="basicInfo">
+          <h1>{username}</h1>
+          {authState.username === username && (
+            <button onClick={() => {
+              navigate('/changepassword')
+            }}>
+              Change my Password</button>
+            )}
         </div>
-        );
-      })}
-    </div>
+        <div className="listOfGrams">
+          <div>
+            {listOfGrams.map((value, key) => {
+              return (
+                <div key={key} className="gram">
+                  <div className="title">{value.title}</div>
+                  <div className="body"
+                    onClick={() => {
+                    navigate(`/gram/${value.id}`)
+                    }}
+                  >
+                    <img className="gramImage" src={value.image} alt="Gram Image"/>
+                    {value.gramText}
+                  </div>
+                  <div className="footer">
+                    <div className="username">{value.username}</div>
+                    <div className="buttons">
+                      <PetsIcon /><label>{value.Likes.length}</label>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-          
-    </div>
-  )
+        </div>     
+      </div>
+    )
 }
 
 export default Profile

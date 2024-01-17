@@ -11,7 +11,7 @@ function Home() {
     const [listOfGrams, setListOfGrams] = useState([]);
     // state that will hold a list of likedGrams
     const [likedGrams, setLikedGrams] = useState([]);
-     const { authState } = useContext(AuthContext);
+    const { authState } = useContext(AuthContext);
     let navigate = useNavigate();
 
   useEffect(() => {

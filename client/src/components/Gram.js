@@ -105,6 +105,7 @@ function Gram() {
   };
   
   return (
+   
     <div className="gramPage">
       <div className="leftSide">
         <div className="gram" id="individual">
@@ -117,29 +118,41 @@ function Gram() {
           >
             {gramObject.title}{" "}
           </div>
-          <div className="body"
-            onClick={() => {
-              if(authState.username === gramObject.username){
-                editGram("body")
-              }
-            }}
-            >
-              <img className="gramImage" src={gramObject.image} alt="gato pic"/>
+          <div className="body">
+            <img className="gramImage" src={gramObject.image} alt="gato pic"/>    
+          </div>
+            {gramObject.isAdopt && (
+            <>
+            <div className="adoptInfoContainer">
+              <h3>Adoption Information</h3>
+              <div>
+                <label>Gender: </label>
+                {gramObject.adoptInfoGender}
+              </div>
+              <div>
+                <label>Location: </label>
+                {gramObject.adoptInfoLocation}
+              </div>
+              <div>
+                <label>Cat Type: </label>
+                {gramObject.adoptInfoCatType}
+              </div>
             </div>
-          {/* <div className="body"
-            onClick={() => {
-              if( authState.username === gramObject.username){
-                editGram("body")
-              }
-            }}
-          >
-             {gramObject.gramText}{" "} 
-          </div> */}
+            </>
+            )}
+          <div>
+            <label>Description: </label>
+            {gramObject.gramText}           
+          </div>
           <div className="footer">
             {gramObject.username} 
             { authState.username === gramObject.username && (
-              <button onClick={() => {deleteGram(gramObject.id)}}> Delete Gram</button>
-              )}
+              <button onClick={() => {deleteGram(gramObject.id)}}> Delete Gram</button>   
+            )}
+            {/* Need to rework the edit portion of the gram */}
+            { authState.username === gramObject.username && (
+              <button onClick={() => {editGram("body")}}>Edit Gram</button>
+            )}  
             </div>
         </div>
       </div>

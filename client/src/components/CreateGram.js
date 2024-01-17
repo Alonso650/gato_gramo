@@ -51,15 +51,6 @@ function CreateGram(){
       .catch((err) =>alert("File upload error: " + err.message))
   };
 
-  // const handleAdoptChanges = () => {
-  //   // If isAdopt changes, reset adoptinfo fields
-  //   if(!isDirty('isAdopt')){
-  //     register('adoptInfoCatType').setValue("");
-  //     register('adoptInfoGender').setValue("");
-  //     register('adoptInfoLocation').setValue("");
-  //   }
-  // };
-
   const handleAdoptChange = (e) => {
     setIsAdopt(e.target.value === 'true');
   };
@@ -120,6 +111,7 @@ function CreateGram(){
               <option value="">Select Gender</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
+              <option value="unsure">Unsure</option>
             </select>
 
             <input
