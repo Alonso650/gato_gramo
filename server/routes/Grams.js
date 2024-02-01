@@ -52,7 +52,7 @@ router.get('/byuserId/:id', async (req, res) => {
         include: [Likes],
     });
     res.json(listOfGrams);
-})
+}) 
 
 
 router.post("/", upload.single('image'), validateToken, (req, res) => {
@@ -81,6 +81,8 @@ router.put("/gramText", validateToken, async (req, res) => {
     const { newText, id } = req.body;
     await Grams.update({ gramText: newText}, { where: { id: id}})
 })
+
+// **Note: Include put routes for other components of the gram like location, cat type etc**
 
 router.delete("/:gramId", validateToken, async (req, res) => {
     const gramId = req.params.gramId;

@@ -121,21 +121,39 @@ function Gram() {
           <div className="body">
             <img className="gramImage" src={gramObject.image} alt="gato pic"/>    
           </div>
-            {gramObject.isAdopt && (
+            {gramObject.isAdopt &&(
             <>
             <div className="adoptInfoContainer">
               <h3>Adoption Information</h3>
               <div>
+                <label>Cat Type:</label>
+                {gramObject.adoptInfoCatType}
+              </div>
+              {gramObject.adoptInfoIsStray ? (
+                <div>
+                <label>Stray: </label> Yes
+              </div>
+              ) : (
+                <div>
+                <label>Stray: </label> No
+              </div>
+              )}
+              <div>
                 <label>Gender: </label>
                 {gramObject.adoptInfoGender}
               </div>
+              <h5>Approximate Location of the Cat</h5>
               <div>
-                <label>Location: </label>
-                {gramObject.adoptInfoLocation}
+                <label>City: </label>
+                {gramObject.adoptInfoCity}
               </div>
               <div>
-                <label>Cat Type: </label>
-                {gramObject.adoptInfoCatType}
+                <label>State: </label>
+                {gramObject.adoptInfoState}
+              </div>
+              <div>
+                <label>Zipcode: </label>
+                {gramObject.adoptInfoZipcode}
               </div>
             </div>
             </>
@@ -153,7 +171,7 @@ function Gram() {
             { authState.username === gramObject.username && (
               <button onClick={() => {editGram("body")}}>Edit Gram</button>
             )}  
-            </div>
+          </div>
         </div>
       </div>
       <div className="rightSide">

@@ -9,15 +9,19 @@ import { yupResolver } from "@hookform/resolvers/yup"
 function CreateGram(){
   const navigate = useNavigate();
   const [isAdopt, setIsAdopt] = useState(false);
-  const {register, handleSubmit, formState:{errors, isDirty}} = useForm({
+  // const [isStray, setIsStray] = useState(false);
+  const {register, handleSubmit, formState:{errors}} = useForm({
     defaultValues:{
       title: "",
       gramText: "",
       image: "",
       isAdopt: "",
       adoptInfoGender: "",
-      adoptInfoLocation: "",
+      adoptInfoIsStray: "",
       adoptInfoCatType: "",
+      adoptInfoCity: "",
+      adoptInfoState: "",
+      adoptInfoZipcode: "",
     },
     resolver: yupResolver(validationSchema),
   });
@@ -36,8 +40,12 @@ function CreateGram(){
     // adoption info
     formData.append("isAdopt", data.isAdopt);
     formData.append("adoptInfoGender", data.adoptInfoGender);
-    formData.append("adoptInfoLocation", data.adoptInfoLocation);
     formData.append("adoptInfoCatType", data.adoptInfoCatType);
+    formData.append("adoptInfoIsStray", data.adoptInfoIsStray);
+    formData.append("adoptInfoCity", data.adoptInfoCity);
+    formData.append("adoptInfoState", data.adoptInfoState);
+    formData.append("adoptInfoZipcode", data.adoptInfoZipcode);
+    
 
     axios.post("http://localhost:3001/grams", formData,{ 
       headers: {
@@ -54,6 +62,12 @@ function CreateGram(){
   const handleAdoptChange = (e) => {
     setIsAdopt(e.target.value === 'true');
   };
+
+  /*
+    NOTES: 
+    FIX POSITIONING OF THE FORM SINCE ITS TOO LONG AND GOES INTO THE NAVBAR
+
+  */
 
   return(
     <div className='createGramPage'>
@@ -104,9 +118,22 @@ function CreateGram(){
             id="image"
           />
         </div>
-
         {isAdopt && (
           <>
+            <label>Is this cat a stray?</label>
+            <select name="adoptInfoIsStray" id="adoptInfoIsStray" {...register("adoptInfoIsStray")}>
+              <option value="">Select</option>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+            
+            <input
+              id="adoptInfoCatType"
+              placeholder="Cat Type"
+              name="adoptInfoCatType"
+              {...register("adoptInfoCatType")}
+            />
+            
             <select name="catGender" id="adoptInfoGender" {...register('adoptInfoGender')}>
               <option value="">Select Gender</option>
               <option value="male">Male</option>
@@ -114,18 +141,26 @@ function CreateGram(){
               <option value="unsure">Unsure</option>
             </select>
 
+            <h4>Enter approximate location of the kitty cat</h4>
             <input
-              id="adoptInfoLocation"
-              placeholder="Enter location"
-              name="adoptInfoLocation"
-              {...register("adoptInfoLocation")}
+                id="adoptInfoCity"
+                placeholder="Enter the City"
+                name="adoptInfoCity"
+                {...register("adoptInfoCity")}
             />
 
             <input
-              id="adoptInfoCatType"
-              placeholder="Cat Type"
-              name="adoptInfoCatType"
-              {...register("adoptInfoCatType")}
+                id="adoptInfoState"
+                placeholder="Enter state"
+                name="adoptInfoState"
+                {...register("adoptInfoState")}
+            />
+
+            <input
+                id="adoptInfoZipcode"
+                placeholder="Enter Zipcode"
+                name="adoptInfoZipcode"
+                {...register("adoptInfoZipcode")}
             />
           </>
         )}

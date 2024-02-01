@@ -25,12 +25,23 @@ module.exports = (sequelize, DataTypes) => {
         adoptInfoGender:{
             type: DataTypes.STRING,
         },
-        adoptInfoLocation:{
-            type: DataTypes.STRING,
-        },
+       
         adoptInfoCatType:{
             type: DataTypes.STRING,
-        }
+        },
+        adoptInfoIsStray:{
+            type: DataTypes.BOOLEAN,
+        },
+         // split up the location 
+         adoptInfoCity:{
+            type: DataTypes.STRING,
+        },
+        adoptInfoState:{
+            type: DataTypes.STRING,
+        },
+        adoptInfoZipcode:{
+            type: DataTypes.INTEGER,
+        },
     });
     
     return Grams;
