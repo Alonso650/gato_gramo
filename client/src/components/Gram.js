@@ -2,12 +2,14 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../helpers/AuthContext";
+import mapboxgl from "mapbox-gl"
 
 function Gram() {
   let { id } = useParams();
   const [gramObject, setGramObject] = useState({});
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const [map, setMap] = useState(null);
   const { authState } = useContext(AuthContext);
 
   let navigate = useNavigate();
@@ -23,13 +25,91 @@ function Gram() {
 
         const commentsResponse = await axios.get(`http://localhost:3001/comments/${id}`);
         setComments(commentsResponse.data);
+        /*
+        if(gramObject.adoptInfoCity && gramObject.adoptInfoState && gramObject.adoptInfoZipcode){
+          console.log(gramObject.adoptInfoCity);
+          const mapData = await fetchMapData(gramObject.adoptInfoCity, gramObject.adoptInfoState, gramObject.adoptInfoZipcode);
+
+          if(!map){
+            mapboxgl.accessToken = 'pk.eyJ1IjoiaGVjdG9yYWxvbnpvdG9ycmVzIiwiYSI6ImNrODZrNWdzOTA4dG0zZnA5MmZnZWZ6YXEifQ.srAhuc_wTyhyOFLMDcXr2g';
+
+            const mapInstance = new mapboxgl.Map({
+            container: 'mapContainer',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: mapData.center,
+            zoom: 12,
+            });
+            setMap(mapInstance);
+          } else{
+            map.setCenter(mapData.center);
+            map.setZoom(12);
+          }
+          new mapboxgl.Marker()
+            .setLngLat(mapData.center)
+            .addTo(map);
+        }
+        */
+        const location = `${gramObject.adoptInfoCity}, ${gramObject.adoptInfoState}, ${gramObject.adoptInfoZipcode}`;
+        const mapData = await fetchMapData(location);
+
+        if(!map){
+          mapboxgl.accessToken = 'pk.eyJ1IjoiaGVjdG9yYWxvbnpvdG9ycmVzIiwiYSI6ImNrODZrNWdzOTA4dG0zZnA5MmZnZWZ6YXEifQ.srAhuc_wTyhyOFLMDcXr2g';
+          const mapInstance = new mapboxgl.Map({
+            container: 'mapContainer',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: mapData.center,
+            zoom: 12,
+          });
+          setMap(mapInstance);
+        } else{
+          map.setCenter(mapData.center);
+          map.setZoom(12);
+        }
+
+        new mapboxgl.Marker()
+          .setLngLat(mapData.center)
+          .addTo(map);
     } catch (error) {
         console.error("Error fetching data:", error);
     }
     };
 
     fetchData();
-  }, [id]);
+  }, [id, map]);
+
+  /*
+  const fetchMapData = async(city, state, zipcode) => {
+      const location = `${city}, ${state}, ${zipcode}`;
+      const response = await axios.get('https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(location) + '.json',{
+        params:{
+          access_token: 'pk.eyJ1IjoiaGVjdG9yYWxvbnpvdG9ycmVzIiwiYSI6ImNrODZrNWdzOTA4dG0zZnA5MmZnZWZ6YXEifQ.srAhuc_wTyhyOFLMDcXr2g'
+        }
+      });
+  */
+  const fetchMapData = async (location) => {
+    const response = await axios.get('https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(location) + '.json',{
+        params:{
+          access_token: 'pk.eyJ1IjoiaGVjdG9yYWxvbnpvdG9ycmVzIiwiYSI6ImNrODZrNWdzOTA4dG0zZnA5MmZnZWZ6YXEifQ.srAhuc_wTyhyOFLMDcXr2g'
+        }
+      });
+      const features = response.data.features;
+      if(features.length > 0){
+        const center = features[0].center;
+        return { center: center};
+      } else {
+        throw new Error('Location not found');
+      }
+  };
+
+  const initializeMap = (center) => {
+    const mapInstance = new mapboxgl.Map({
+      container: 'mapContainer',
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: center,
+      zoom: 12
+    });
+    setMap(mapInstance);
+  }
 
   const addComment = () => {
     axios
@@ -187,7 +267,10 @@ function Gram() {
             }}
           />
           <button onClick={addComment}>Add Comment</button>
+          <div id="mapContainer" style={{ width: '100%', height: '400px'}}></div>
+
         </div>
+        
         <div className="listOfComments">
           {comments.map((comment, key) => {
             return(
