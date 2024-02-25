@@ -66,9 +66,45 @@ function Gram() {
           map.setZoom(12);
         }
 
-        new mapboxgl.Marker()
-          .setLngLat(mapData.center)
-          .addTo(map);
+      if(map){
+        map.on('load', function(){
+          map.addSource('radius', {
+            type: 'geojson',
+            data:{
+              type: 'FeatureCollection',
+              features: [{
+                type: 'Feature',
+                geometry: {
+                  type: 'Point',
+                  coordinates: [mapData.center]
+                }
+              }]
+            }
+          });
+
+        map.addLayer({
+          id: 'radius-layer',
+          type: 'circle',
+          source: 'radius',
+          paint: {
+            'circle-radius': {
+              base: 1.75,
+              stops: [
+                [12, 10],
+                [22, 180]
+              ]
+            },
+            'circle-color': 'rgba(255, 0, 0, 0.5)',
+            'circle-stroke-color': 'rgba(255, 0, 0, 1)',
+            'circle-stroke-width': 1
+          }
+        });
+      });
+    }
+
+        // new mapboxgl.Marker()
+        //   .setLngLat(mapData.center)
+        //   .addTo(map);
     } catch (error) {
         console.error("Error fetching data:", error);
     }
@@ -76,7 +112,7 @@ function Gram() {
 
     fetchData();
   }, [id, map]);
-
+ 
   /*
   const fetchMapData = async(city, state, zipcode) => {
       const location = `${city}, ${state}, ${zipcode}`;
@@ -101,15 +137,15 @@ function Gram() {
       }
   };
 
-  const initializeMap = (center) => {
-    const mapInstance = new mapboxgl.Map({
-      container: 'mapContainer',
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: center,
-      zoom: 12
-    });
-    setMap(mapInstance);
-  }
+  // const initializeMap = (center) => {
+  //   const mapInstance = new mapboxgl.Map({
+  //     container: 'mapContainer',
+  //     style: 'mapbox://styles/mapbox/streets-v11',
+  //     center: center,
+  //     zoom: 12
+  //   });
+  //   setMap(mapInstance);
+  // }
 
   const addComment = () => {
     axios

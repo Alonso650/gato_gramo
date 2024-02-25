@@ -29,10 +29,16 @@ module.exports = (sequelize, DataTypes) => {
         adoptInfoCatType:{
             type: DataTypes.STRING,
         },
-        adoptInfoIsStray:{
+        IsStray:{
             type: DataTypes.BOOLEAN,
         },
          // split up the location 
+        isFromShelter:{
+            type: DataTypes.BOOLEAN,
+        },
+        adopInfoStreet:{
+            type: DataTypes.STRING
+        },
          adoptInfoCity:{
             type: DataTypes.STRING,
         },

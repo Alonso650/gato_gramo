@@ -9,6 +9,8 @@ import { yupResolver } from "@hookform/resolvers/yup"
 function CreateGram(){
   const navigate = useNavigate();
   const [isAdopt, setIsAdopt] = useState(false);
+  const [isFromShelter, setIsFromShelter] = useState(false);
+  const [isStray, setIsStray] = useState(false);
   // const [isStray, setIsStray] = useState(false);
   const {register, handleSubmit, formState:{errors}} = useForm({
     defaultValues:{
@@ -16,9 +18,11 @@ function CreateGram(){
       gramText: "",
       image: "",
       isAdopt: "",
+      isFromShelter: "",
       adoptInfoGender: "",
-      adoptInfoIsStray: "",
+      IsStray: "",
       adoptInfoCatType: "",
+      adoptInfoStreet: "",
       adoptInfoCity: "",
       adoptInfoState: "",
       adoptInfoZipcode: "",
@@ -39,9 +43,11 @@ function CreateGram(){
     formData.append("title", data.title);
     // adoption info
     formData.append("isAdopt", data.isAdopt);
+    formData.append("isFromShelter", data.isFromShelter);
     formData.append("adoptInfoGender", data.adoptInfoGender);
     formData.append("adoptInfoCatType", data.adoptInfoCatType);
-    formData.append("adoptInfoIsStray", data.adoptInfoIsStray);
+    formData.append("isStray", data.isStray);
+    formData.append("adoptInfoStreet", data.adoptInfoStreet); 
     formData.append("adoptInfoCity", data.adoptInfoCity);
     formData.append("adoptInfoState", data.adoptInfoState);
     formData.append("adoptInfoZipcode", data.adoptInfoZipcode);
@@ -63,6 +69,14 @@ function CreateGram(){
     setIsAdopt(e.target.value === 'true');
   };
 
+  const handleShelterChange = (e) => {
+    setIsFromShelter(e.target.value === 'true');
+  };
+
+  const handleStrayChange = (e) => {
+    setIsStray(e.target.value === 'true');
+  };
+
   /*
     NOTES: 
     FIX POSITIONING OF THE FORM SINCE ITS TOO LONG AND GOES INTO THE NAVBAR
@@ -72,23 +86,22 @@ function CreateGram(){
   return(
     <div className='createGramPage'>
      <form className="formContainer" 
-         onSubmit ={handleSubmit(submitForm)}>
-          <h1>Gram Creation</h1>
+        onSubmit ={handleSubmit(submitForm)}>
+        <h1>Gram Creation</h1>
         {/* Depending on what user answers will display adoption info */}
 
         <label>Is this cat looking for a new home?</label>
         <div>
-          
-            <select
-              {...register('isAdopt')}
+          <select
+            {...register('isAdopt')}
               onChange={handleAdoptChange}
-            >
-              <option value="">Select</option>
-              <option value="true">Yes</option>
-              <option value="false">No</option>
-            </select>
+          >
+            <option value="">Select</option>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
         </div>
-      
+
         {/* <label>Title:</label> */}
         <input
           id="title"
@@ -106,66 +119,150 @@ function CreateGram(){
           {...register('gramText')}
         />
 
-        
-        
         {/* <label>Image:</label> */}
         <div>
           <label>Image:</label>
-        <input
+          <input
             type="file"
             name="image"
             {...register("image")}
             id="image"
           />
         </div>
-        {isAdopt && (
-          <>
-            <label>Is this cat a stray?</label>
-            <select name="adoptInfoIsStray" id="adoptInfoIsStray" {...register("adoptInfoIsStray")}>
+        <div>
+          <input
+            id="adoptInfoCatType"
+            placeholder="Cat Type"
+            name="adoptInfoCatType"
+            {...register("adoptInfoCatType")}
+          />
+        </div>
+        <div>
+        <select name="catGender" id="adoptInfoGender" {...register('adoptInfoGender')}>
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="unsure">Unsure</option>
+          </select>
+        </div>
+  
+        {isAdopt &&(
+        <>
+          <label>Is This cat located at a shelter?</label>
+          <div>
+            <select
+              {...register('isFromShelter')}
+                onChange={handleShelterChange}
+            >
               <option value="">Select</option>
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
+              <option value="true">Yes</option>
+              <option value="false">No</option>
             </select>
-            
-            <input
-              id="adoptInfoCatType"
-              placeholder="Cat Type"
-              name="adoptInfoCatType"
-              {...register("adoptInfoCatType")}
-            />
-            
-            <select name="catGender" id="adoptInfoGender" {...register('adoptInfoGender')}>
-              <option value="">Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="unsure">Unsure</option>
-            </select>
+          </div>
 
-            <h4>Enter approximate location of the kitty cat</h4>
-            <input
-                id="adoptInfoCity"
-                placeholder="Enter the City"
-                name="adoptInfoCity"
-                {...register("adoptInfoCity")}
+          {!isFromShelter &&(
+            <>
+              <label> Is this a stray cat? </label>
+              <div>
+                <select {...register('isStray')} onChange={handleStrayChange}>
+                  <option value="">Select</option>
+                  <option value="true">Yes</option>
+                  <option value="false">No</option>
+                </select>
+              </div>
+            </>
+          )}
+
+          {/* {isAdopt && isStray &&(
+            <>
+              {!isStray &&  (
+                <>
+                  <h4> Enter location of the cat: (Note personal address will not be shown on the map only approximate location)</h4>
+                </>
+              )} */}
+          {!isFromShelter && (
+            <>
+            <label> Is this a stray cat? </label>
+            <div>
+              <select {...register('isStray')} onChange={handleStrayChange}>
+                <option value="">Select</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+            </div>
+
+            {isStray && (
+              <>
+              <h4> Whatd up</h4>
+              <input
+              id="adoptInfoStreet"
+              placeholder="Enter street address"
+              name="adoptInfoStreet"
+              {...register("adoptInfoStreet")}
             />
 
             <input
-                id="adoptInfoState"
-                placeholder="Enter state"
-                name="adoptInfoState"
-                {...register("adoptInfoState")}
+              id="adoptInfoCity"
+              placeholder="Enter the City"
+              name="adoptInfoCity"
+              {...register("adoptInfoCity")}
             />
 
             <input
-                id="adoptInfoZipcode"
-                placeholder="Enter Zipcode"
-                name="adoptInfoZipcode"
-                {...register("adoptInfoZipcode")}
+              id="adoptInfoState"
+              placeholder="Enter state"
+              name="adoptInfoState"
+              {...register("adoptInfoState")}
             />
-          </>
-        )}
+
+            <input
+              id="adoptInfoZipcode"
+              placeholder="Enter Zipcode"
+              name="adoptInfoZipcode"
+              {...register("adoptInfoZipcode")}
+            />
+            </>
+  
+          )}
+        </>
+      )}
           
+          {!isFromShelter && isStray &&(
+            <>
+            <h4>Enter approximate location of the cat (Note: personal street address will not be shown on map)</h4>
+            {/* <h4> Enter the location of the animal shelter:</h4> */}
+            <input
+              id="adoptInfoStreet"
+              placeholder="Enter street address"
+              name="adoptInfoStreet"
+              {...register("adoptInfoStreet")}
+            />
 
+            <input
+              id="adoptInfoCity"
+              placeholder="Enter the City"
+              name="adoptInfoCity"
+              {...register("adoptInfoCity")}
+            />
+
+            <input
+              id="adoptInfoState"
+              placeholder="Enter state"
+              name="adoptInfoState"
+              {...register("adoptInfoState")}
+            />
+
+            <input
+              id="adoptInfoZipcode"
+              placeholder="Enter Zipcode"
+              name="adoptInfoZipcode"
+              {...register("adoptInfoZipcode")}
+            />
+
+            </>
+          )}
+        </>
+        )}
         <button type="submit">Create Gram</button>
       </form>
     </div>
