@@ -22,31 +22,39 @@ module.exports = (sequelize, DataTypes) => {
         isAdopt:{
             type: DataTypes.BOOLEAN,
         },
-        adoptInfoGender:{
-            type: DataTypes.STRING,
-        },
+        // adoptInfoGender:{
+        //     type: DataTypes.STRING,
+        //     allowNull: true,
+        // },
        
-        adoptInfoCatType:{
-            type: DataTypes.STRING,
-        },
-        IsStray:{
+        // adoptInfoCatType:{
+        //     type: DataTypes.STRING,
+        //     allowNull: true,
+        // },
+        isStray:{
             type: DataTypes.BOOLEAN,
+            allowNull: true,
         },
-         // split up the location 
+        //  // split up the location 
         isFromShelter:{
             type: DataTypes.BOOLEAN,
+            allowNull: true,
         },
         adopInfoStreet:{
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
+            allowNull: true,
         },
          adoptInfoCity:{
             type: DataTypes.STRING,
+            allowNull: true,
         },
         adoptInfoState:{
             type: DataTypes.STRING,
+            allowNull: true,
         },
         adoptInfoZipcode:{
             type: DataTypes.INTEGER,
+            allowNull: true,
         },
     });
     

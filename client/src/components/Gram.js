@@ -14,10 +14,12 @@ function Gram() {
 
   let navigate = useNavigate();
 
+
   // made useEffect asynchronous and await is used to wait for each API call
   // to complete. Included the id variable in the dependency array to trigger the effect
   // when the id changes
   useEffect(() => {
+
     const fetchData = async () => {
       try {
         const gramResponse = await axios.get(`http://localhost:3001/grams/byId/${id}`);
@@ -25,64 +27,47 @@ function Gram() {
 
         const commentsResponse = await axios.get(`http://localhost:3001/comments/${id}`);
         setComments(commentsResponse.data);
-        /*
-        if(gramObject.adoptInfoCity && gramObject.adoptInfoState && gramObject.adoptInfoZipcode){
-          console.log(gramObject.adoptInfoCity);
-          const mapData = await fetchMapData(gramObject.adoptInfoCity, gramObject.adoptInfoState, gramObject.adoptInfoZipcode);
 
-          if(!map){
-            mapboxgl.accessToken = 'pk.eyJ1IjoiaGVjdG9yYWxvbnpvdG9ycmVzIiwiYSI6ImNrODZrNWdzOTA4dG0zZnA5MmZnZWZ6YXEifQ.srAhuc_wTyhyOFLMDcXr2g';
-
-            const mapInstance = new mapboxgl.Map({
-            container: 'mapContainer',
-            style: 'mapbox://styles/mapbox/streets-v11',
-            center: mapData.center,
-            zoom: 12,
-            });
-            setMap(mapInstance);
-          } else{
-            map.setCenter(mapData.center);
-            map.setZoom(12);
-          }
-          new mapboxgl.Marker()
-            .setLngLat(mapData.center)
-            .addTo(map);
-        }
-        */
         const location = `${gramObject.adoptInfoCity}, ${gramObject.adoptInfoState}, ${gramObject.adoptInfoZipcode}`;
         const mapData = await fetchMapData(location);
+        console.log(process.env.REACT_APP_API_KEY);
 
         if(!map){
-          mapboxgl.accessToken = 'pk.eyJ1IjoiaGVjdG9yYWxvbnpvdG9ycmVzIiwiYSI6ImNrODZrNWdzOTA4dG0zZnA5MmZnZWZ6YXEifQ.srAhuc_wTyhyOFLMDcXr2g';
+          // mapboxgl.accessToken = 'pk.eyJ1IjoiaGVjdG9yYWxvbnpvdG9ycmVzIiwiYSI6ImNrODZrNWdzOTA4dG0zZnA5MmZnZWZ6YXEifQ.srAhuc_wTyhyOFLMDcXr2g';
+          mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API;
           const mapInstance = new mapboxgl.Map({
             container: 'mapContainer',
             style: 'mapbox://styles/mapbox/streets-v11',
             center: mapData.center,
-            zoom: 12,
+            zoom: 250,
+            interactive: false,
           });
           setMap(mapInstance);
         } else{
           map.setCenter(mapData.center);
           map.setZoom(12);
+          // Disable map zoom when using scroll
+          map.scrollZoom.disable();
         }
 
-      if(map){
-        map.on('load', function(){
-          map.addSource('radius', {
-            type: 'geojson',
-            data:{
-              type: 'FeatureCollection',
-              features: [{
-                type: 'Feature',
-                geometry: {
-                  type: 'Point',
-                  coordinates: [mapData.center]
-                }
-              }]
-            }
-          });
-
-        map.addLayer({
+        if(map){
+          map.on('load', function(){
+            console.log("Center coordinates: ", mapData.center);
+            map.addSource("radius",{
+              type: 'geojson',
+              data:{
+                type: 'FeatureCollection',
+                features: [{
+                  type: 'Feature',
+                  geometry: {
+                    type: 'Point',
+                    coordinates: mapData.center
+                  }
+                }]
+              }
+            });
+          
+          map.addLayer({
           id: 'radius-layer',
           type: 'circle',
           source: 'radius',
@@ -90,7 +75,7 @@ function Gram() {
             'circle-radius': {
               base: 1.75,
               stops: [
-                [12, 10],
+                [12, 30],
                 [22, 180]
               ]
             },
@@ -113,19 +98,10 @@ function Gram() {
     fetchData();
   }, [id, map]);
  
-  /*
-  const fetchMapData = async(city, state, zipcode) => {
-      const location = `${city}, ${state}, ${zipcode}`;
-      const response = await axios.get('https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(location) + '.json',{
-        params:{
-          access_token: 'pk.eyJ1IjoiaGVjdG9yYWxvbnpvdG9ycmVzIiwiYSI6ImNrODZrNWdzOTA4dG0zZnA5MmZnZWZ6YXEifQ.srAhuc_wTyhyOFLMDcXr2g'
-        }
-      });
-  */
   const fetchMapData = async (location) => {
     const response = await axios.get('https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(location) + '.json',{
         params:{
-          access_token: 'pk.eyJ1IjoiaGVjdG9yYWxvbnpvdG9ycmVzIiwiYSI6ImNrODZrNWdzOTA4dG0zZnA5MmZnZWZ6YXEifQ.srAhuc_wTyhyOFLMDcXr2g'
+          access_token: process.env.REACT_APP_MAPBOX_API
         }
       });
       const features = response.data.features;
@@ -303,6 +279,7 @@ function Gram() {
             }}
           />
           <button onClick={addComment}>Add Comment</button>
+          {/* Displays the map on the gram, if it is an adoption post */}
           <div id="mapContainer" style={{ width: '100%', height: '400px'}}></div>
 
         </div>
