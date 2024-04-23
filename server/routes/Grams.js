@@ -22,6 +22,7 @@ const imageFilter = function(req, file, callback){
 
 var upload = multer({ storage: storage, fileFiler: imageFilter});
 
+// storing the photos on cloudinary
 cloudinary.config({
     cloud_name: 'alonso650',
     api_key: process.env.CLOUDINARY_API_KEY,
@@ -80,6 +81,7 @@ router.put("/title", validateToken, async (req, res) => {
 router.put("/gramText", validateToken, async (req, res) => {
     const { newText, id } = req.body;
     await Grams.update({ gramText: newText}, { where: { id: id}})
+    res.json(newText);
 })
 
 // **Note: Include put routes for other components of the gram like location, cat type etc**

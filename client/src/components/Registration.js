@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { registrationSchema } from '../helpers/schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import axios from "axios";
+import './Registration.css'
 
 function Registration() {
     const navigate = useNavigate();

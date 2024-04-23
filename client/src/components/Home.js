@@ -4,7 +4,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import {useNavigate, Link} from "react-router-dom";
 import PetsIcon from '@mui/icons-material/Pets';
-import { AuthContext } from "../helpers/AuthContext"
+import { AuthContext } from "../helpers/AuthContext";
+import './Home.css';
 
 
 function Home() {

@@ -11,89 +11,6 @@
     padding: 0;
   }
 
-  .gridGram{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 8px;
-    max-width: 1200px;
-    width: 100%;
-    margin: 0 auto;
-  }
-
-  .gridGram div {
-    position: relative;
-  }
-  
-  .gramImage{
-    max-width: 200px;
-    max-height: 200px;
-    object-fit: contain;
-  }
-  .gram{
-    width: 400px;
-    height: 400px;
-    border-radius: 10px;
-    display: flex;
-    /*-------------------*/
-    /* display: inline-block;
-    position: relative;
-    padding: 50px;
-    
-    text-align: center; */
-    /*-------------------*/
-    flex-direction: column;
-    margin-top: 50px;
-    border: 1px solid lightgray;
-    font-family: Arial, Helvetica, sans-serif;
-  
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  }
-  
-  .gram:hover{
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-    cursor: pointer;
-  }
-  
-  .gram .title{
-    flex: 20%;
-    border-bottom: 1px solid lightgray;
-    background-color: darkcyan;
-    display: grid;
-    place-content: center;
-    color: white;
-    font-size: large;
-  }
-  
-  .gram .body{
-    flex: 60%;
-    display: grid;
-    place-content: center;
-  }
-  
-  .gram .footer{
-    flex: 20%;
-    border-top: 1px solid lightgray;
-    display: flex;
-    align-items: center;
-    padding-left: 15px;
-    background-color: darkcyan;
-    color: white;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-  }
-  
-  .footer .username{
-    flex: 50%;
-    font-size: large;
-  }
-  
-  .footer .buttons{
-    flex: 50%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-  }
-  
   .likeBttn{
     color: rgba(250, 250, 250, 0.8);
   }
@@ -106,73 +23,7 @@
     margin-right: 20px;
     margin-left: 10px;
   }
-  
-  /* CREATE GRAM PAGE CSS */
-  
-  .createGramPage{
-    font-family: Arial, Helvetica, sans-serif;
-    width: 100vw;
-    height: 70vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
 
-  .registrationPage{
-    font-family: Arial, Helvetica, sans-serif;
-    width: 100vw;
-    height: 70vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  /* .formContainer{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 300px;
-    height: auto;
-    padding: 20px;
-    border: 5px solid;
-    border-radius: 2.5px;
-  } */
-
-  .formContainer{
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    border: 2px solid;
-    padding: 35px;
-    border-radius: 30px;
-    text-align: center;
-  }
-  
-  /* .formContainer #inputCreateGram{
-    height: 40px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    border: 2px solid grey;
-    border-radius: 5px;
-    padding-left: 10px;
-    font-size: 20px;
-  } */
-  
-  .formContainer button{
-    margin-top: 15px;
-    height: 40px;
-    border: none;
-    background-color: darkcyan;
-    border-radius: 5px;
-    color: white;
-  }
-  
-  .formContainer button:hover{
-    cursor: pointer;
-    background-color: darkcyan;
-  }
-  
-  
   span{
     color: red;
   }
@@ -196,15 +47,7 @@
     align-items: center;
   }
   
-  .navbar .loggedInContainer{
-    flex: 50%;
-    height: 100%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-  }
-  
-  a{
+  a {
     margin-left: 20px;
     text-decoration: none;
     color: white;
@@ -224,126 +67,51 @@
     color: white;
     font-weight: lighter;
   }
-  
-  /* INDIVIDUAL GRAM */
-  .gramPage{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: 100%;
-    height: 100%;
+
+  .dropdown{
+    float: left;
+    overflow: hidden;
   }
 
-  .adoptInfoContainer{
-    display: flex;
-    flex-direction: column;
-    
-  }
-  
-  .leftSide{
-    flex: 50%;
-    height: calc(100vh - 70px);
-    display: grid;
-    place-items: center;
-  }
-  
-  .rightSide{
-    flex: 50%;
-    height: calc(100vh - 70px);
-    display: grid;
-    place-items: center;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .rightSide .addCommentContainer{
-    flex: 20%;
-    width: 100%;
-    display: grid;
-    place-items: center;
-    margin-top: 25px;
-  }
-  
-  .addCommentContainer input, button{
-    width: 200px;
-    height: 50px;
-    border-radius: 8px;
+  .dropdown .dropbtn{
+    cursor: pointer;
+    font-size: 16px;
     border: none;
-  }
-  
-  .addCommentContainer button{
-    background-color: darkcyan;
+    outline: none;
     color: white;
-  }
-  
-  .addCommentContainer input{
-    border: 2px solid darkcyan;
-  }
-  
-  .rightSide .listOfComments{
-    flex: 80%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .listOfComments .comment{
-    width: 70%;
-    height: auto;
-    padding: 30px;
-    border: 1px solid lightgray;
-    border-radius: 5px;
-    margin-top: 20px;
-  }
-  
-  #individual{
-    height: 500px;
-    width: 600px;
-  }
-  
-  #individual .title,
-  #individual .footer{
-    font-size: 30px;
-  }
-  
-  #individual .body{
-    font-size: 25px;
-  }
-  
-  /* Login Styling */
-  
-  .loginContainer{
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    width: 100%;
-    height: 100vh;
-    padding-top: 100px;
-  }
-  
-  .loginContainer input,
-  button{
-    width: 200px;
-    height: 50px;
-    border-radius: 8px;
-    border: none;
-    margin: 10px;
-  }
-  
-  .loginContainer button{
-    background-color: darkcyan;
-    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
   }
 
-  .loginTitle{
-    font-family: 'Satisfy', cursive;
-    font-family: 'Merienda', cursive;
-    color: rgb(96, 218, 177);
-    font-size: 3em;
-
+  .navbar a:hover, .dropdown:hover .dropbtn, .dropbtn:focus{
+    background-color: rgb(218, 166, 166);
   }
+
+  .dropdown-content{
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+
+  .dropdown-content a{
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+  }
+
+  .dropdown-content a:hover{
+    background-color: #ddd;
+  }
+
   
-  .loginContainer input{
-    border: 2px solid darkcyan;
+  .show{
+    display: block;
   }

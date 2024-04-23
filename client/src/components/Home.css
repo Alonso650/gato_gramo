@@ -1,0 +1,83 @@
+.gridGram{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 8px;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .gridGram div {
+    position: relative;
+  }
+
+  .gramImage{
+    max-width: 200px;
+    max-height: 200px;
+    object-fit: contain;
+  }
+
+  .gram{
+    width: 400px;
+    height: 400px;
+    border-radius: 10px;
+    display: flex;
+    /*-------------------*/
+    /* display: inline-block;
+    position: relative;
+    padding: 50px;
+    
+    text-align: center; */
+    /*-------------------*/
+    flex-direction: column;
+    margin-top: 50px;
+    border: 1px solid lightgray;
+    font-family: Arial, Helvetica, sans-serif;
+  
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  }
+
+  .gram:hover{
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    cursor: pointer;
+  }
+  
+  .gram .title{
+    flex: 20%;
+    border-bottom: 1px solid lightgray;
+    background-color: darkcyan;
+    display: grid;
+    place-content: center;
+    color: white;
+    font-size: large;
+  }
+  
+  .gram .body{
+    flex: 60%;
+    display: grid;
+    place-content: center;
+  }
+  
+  .gram .footer{
+    flex: 20%;
+    border-top: 1px solid lightgray;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    background-color: darkcyan;
+    color: white;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+  
+  .footer .username{
+    flex: 50%;
+    font-size: large;
+  }
+  
+  .footer .buttons{
+    flex: 50%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }

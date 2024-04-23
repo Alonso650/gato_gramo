@@ -48,6 +48,21 @@ function App() {
     navigate("/login");
   };
 
+  function dropDownFunct(){
+    document.getElementById("myDropDown").classList.toggle("show");
+  }
+
+  // if dropdown menu is visible then clicking anywhere on the window
+  // will make the dropdown menu disappear
+  window.onclick = function(e){
+    if(!e.target.matches('.dropbtn')){
+      let myDropDown = document.getElementById("myDropDown");
+      if(myDropDown.classList.contains('show')){
+        myDropDown.classList.remove('show');
+      }
+    }
+  }
+
   return (
     <div className="App">
       <AuthContext.Provider value={{authState, setAuthState}}>
@@ -66,10 +81,15 @@ function App() {
             </>
           )}
         </div>
-        <div className="loggedInContainer">
-          <h1><Link to ={`/profile/${authState.id}`}>{authState.username}</Link></h1>
-          {authState.status && <button onClick={logout}>Logout</button>}
-        </div>
+          <div className="dropdown">
+            <button className="dropbtn" onClick={dropDownFunct}>
+              {authState.username}
+            </button>
+              <div className="dropdown-content" id="myDropDown">
+                <a href={`/profile/${authState.id}`}>Profile</a>
+                <a href="#" onClick={logout}>Logout</a>
+              </div>
+            </div>
       </div>
       
       <Routes>

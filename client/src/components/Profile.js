@@ -4,6 +4,7 @@ import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext"
 import PetsIcon from '@mui/icons-material/Pets';
+import './Profile.css'
 
 
 function Profile() {

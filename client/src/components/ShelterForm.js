@@ -3,7 +3,7 @@ import { FormWrapper } from "./FormWrapper"
 export function ShelterForm({ updateFields, isAdopt, isFromShelter }){
 
     return(
-        <FormWrapper title="Shelter Info">
+        <FormWrapper title="Adopt Info">
             <label>Is this cat looking for a new home</label>
             <select onChange={(e) => updateFields({ isAdopt: e.target.value === 'true'})}>
                 <option value="null">Select</option>

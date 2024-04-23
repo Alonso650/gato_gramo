@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../helpers/AuthContext";
 import mapboxgl from "mapbox-gl"
+import './Gram.css'
 
 function Gram() {
   let { id } = useParams();
@@ -33,7 +34,6 @@ function Gram() {
         console.log(process.env.REACT_APP_API_KEY);
 
         if(!map){
-          // mapboxgl.accessToken = 'pk.eyJ1IjoiaGVjdG9yYWxvbnpvdG9ycmVzIiwiYSI6ImNrODZrNWdzOTA4dG0zZnA5MmZnZWZ6YXEifQ.srAhuc_wTyhyOFLMDcXr2g';
           mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API;
           const mapInstance = new mapboxgl.Map({
             container: 'mapContainer',
@@ -280,8 +280,11 @@ function Gram() {
           />
           <button onClick={addComment}>Add Comment</button>
           {/* Displays the map on the gram, if it is an adoption post */}
-          <div id="mapContainer" style={{ width: '100%', height: '400px'}}></div>
-
+          {gramObject.isAdopt && (
+            <>
+              <div id="mapContainer" style={{ width: '100%', height: '400px'}}></div>
+            </>
+          )}
         </div>
         
         <div className="listOfComments">

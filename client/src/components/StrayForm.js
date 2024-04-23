@@ -3,8 +3,7 @@ import { FormWrapper } from "./FormWrapper"
 export function StrayForm({ updateFields, isStray }){
 
     return(
-        <FormWrapper title="Stray Info">
-
+        <FormWrapper title="Adopt Info">
             <label>Is this a stray cat?</label>
             <select onChange={(e) => updateFields({ isStray: e.target.value  === 'true'})}>
                 <option value="null">Select</option>

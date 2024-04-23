@@ -8,6 +8,8 @@ import { MultistepForm } from "./MultistepForm";
 import { GramForm } from './GramForm';
 import { ShelterForm } from './ShelterForm';
 import { StrayForm } from './StrayForm'
+import { HouseForm } from './HouseForm';
+import './CreateGram.css'
 
 
 function CreateGram(){
@@ -46,6 +48,7 @@ function CreateGram(){
     <GramForm {...data} updateFields={updateFields} />,
     <ShelterForm {...data} updateFields={updateFields} isAdopt={data.isAdopt} isFromShelter={data.isFromShelter} />,
     <StrayForm {...data} updateFields={updateFields} isStray={data.isStray}/>,
+    <HouseForm {...data} updateFields={updateFields}/>
   ])
 
   const submitForm = (e) => {
@@ -108,7 +111,7 @@ function CreateGram(){
      <form className="formContainer" 
         onSubmit ={submitForm}>
         <div style={{ position: "absolute", top: ".5rem", right: ".5rem" }}>
-          {currentStepIndex + 1} / {steps.length}
+          {/* {currentStepIndex + 1} / {steps.length} */}
         </div>
         {step}
         <div style={{
@@ -123,7 +126,10 @@ function CreateGram(){
               Back
             </button>
           )}
-        <button type="submit">{isLastStep ? (data.isAdopt === false ? "Create Gram" : "Submit") : "Next"}</button>
+        {/* <button type="submit">{isLastStep ? (data.isAdopt === false ? "Create Gram" : "Submit") : "Next"}</button> */}
+        <button type="submit">
+          { (data.isFromShelter || data.isStray) ? "Submit" : "Next"}
+        </button>        
         </div>
       </form>
     </div>
