@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import {useNavigate, Link} from "react-router-dom";
 import PetsIcon from '@mui/icons-material/Pets';
 import { AuthContext } from "../helpers/AuthContext";
-import './Home.css';
+import styles from './Home.module.css';
 
 
 function Home() {
@@ -72,27 +72,27 @@ function Home() {
 
 
   return (
-    <div className="gridGram">
+    <div className={styles.gridGram}>
     {listOfGrams.map((value, key) => {
       return (
-        <div key={key} className="gram">
-          <div className="title">{value.title}</div>
-            <div className="body"
+        <div key={key} className={styles.gram}>
+          <div className={styles.title}>{value.title}</div>
+            <div className={styles.body}
               onClick={() => {
                 // When clicked on it will direct to the specific gram with the id
                 navigate(`/gram/${value.id}`)
               }}
             >
               {/* {value.gramText} */}
-              <img className="gramImage" src={value.image} alt="Gram Image"/>
+              <img className={styles.gramImage} src={value.image} alt="Gram Image"/>
             </div>
-            <div className="footer">
-              <div className="username">
+            <div className={styles.footer}>
+              <div className={styles.username}>
                 <Link to ={`/profile/${value.UserId}`}>
                   {value.username}
                 </Link>
               </div>
-              <div className="buttons">
+              <div className={styles.buttons}>
               <PetsIcon
                 onClick={() => {
                   likeAPost(value.id);

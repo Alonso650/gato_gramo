@@ -4,7 +4,7 @@ import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext"
 import PetsIcon from '@mui/icons-material/Pets';
-import './Profile.css'
+import styles from './Profile.module.css'
 
 
 function Profile() {
@@ -26,8 +26,8 @@ function Profile() {
     
 
     return (
-      <div className="profilePageContainer">
-        <div className="basicInfo">
+      <div className={styles.profilePageContainer}>
+        <div className={styles.basicInfo}>
           <h1>{username}</h1>
           {authState.username === username && (
             <button onClick={() => {
@@ -36,30 +36,28 @@ function Profile() {
               Change my Password</button>
             )}
         </div>
-        <div className="listOfGrams">
-          <div>
+        <div className={styles.listOfGrams}>
             {listOfGrams.map((value, key) => {
               return (
-                <div key={key} className="gram">
-                  <div className="title">{value.title}</div>
-                  <div className="body"
+                <div key={key} className={styles.gram}>
+                  <div className={styles.title}>{value.title}</div>
+                  <div className={styles.body}
                     onClick={() => {
                     navigate(`/gram/${value.id}`)
                     }}
                   >
-                    <img className="gramImage" src={value.image} alt="Gram Image"/>
+                    <img className={styles.gramImage} src={value.image} alt="Gram Image"/>
                     {value.gramText}
                   </div>
-                  <div className="footer">
-                    <div className="username">{value.username}</div>
-                    <div className="buttons">
+                  <div className={styles.footer}>
+                    <div className={styles.username}>{value.username}</div>
+                    <div className={styles.buttons}>
                       <PetsIcon /><label>{value.Likes.length}</label>
                     </div>
                   </div>
                 </div>
               );
             })}
-          </div>
         </div>     
       </div>
     )

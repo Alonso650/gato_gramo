@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { registrationSchema } from '../helpers/schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import axios from "axios";
-import './Registration.css'
+import styles from './Registration.module.css';
 
 function Registration() {
     const navigate = useNavigate();
@@ -27,36 +27,42 @@ function Registration() {
     }
 
   return (
-    <div className="registrationPage">
-      <form className="formContainer" onSubmit={handleSubmit(onSubmit)}>
+    <div className={styles.registrationPage}>
+      <form className={styles.formContainer} onSubmit={handleSubmit(onSubmit)}>
         <div>
           <h2>Gato-Gramo</h2>
           <h4>Sign up to see cat grams.</h4>
           <hr/>
         </div>
-        {/* <label>Username:</label> */}
+        <div className={styles.registerBox}>
+        <label>Username</label>
           <input
             id="username"
             placeholder="Username"
             name="username"
             {...register('username')}
           />
-        {/* <label>First Name:</label> */}
+        </div>
+        <div className={styles.registerBox}>
+        <label>First Name</label>
           <input
             id="firstName"
             placeholder="First Name"
             name="firstName"
             {...register('firstName')}
           />
-
-        {/* <label>Last Name:</label> */}
+        </div>
+        <div className={styles.registerBox}>
+        <label>Last Name</label>
           <input
             id="lastName"
             placeholder="Last Name"
             name="lastName"
             {...register('lastName')}
           />
-        {/* <label>Email:</label> */}
+        </div>
+        <div className={styles.registerBox}>
+        <label>Email</label>
           <input
             id="email"
             placeholder="Email"
@@ -64,7 +70,9 @@ function Registration() {
             type="email"
             {...register('email')}
           />
-        {/* <label>Password:</label> */}
+        </div>
+        <div className={styles.registerBox}>
+        <label>Password</label>
           <input
             id="password"
             placeholder="Password"
@@ -72,9 +80,10 @@ function Registration() {
             type="password"
             {...register('password')}
           />
-        <button type="Submit">Sign Up</button>
+        </div>
+          <button type="Submit">Register</button>
       </form>
-    </div>
+     </div>
   )
 }
 

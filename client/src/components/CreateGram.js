@@ -9,7 +9,7 @@ import { GramForm } from './GramForm';
 import { ShelterForm } from './ShelterForm';
 import { StrayForm } from './StrayForm'
 import { HouseForm } from './HouseForm';
-import './CreateGram.css'
+import styles from './CreateGram.module.css';
 
 
 function CreateGram(){
@@ -107,8 +107,8 @@ function CreateGram(){
   };
 
   return(
-    <div className='createGramPage'>
-     <form className="formContainer" 
+    <div className={styles.createGramPage}>
+     <form className={styles.formContainer} 
         onSubmit ={submitForm}>
         <div style={{ position: "absolute", top: ".5rem", right: ".5rem" }}>
           {/* {currentStepIndex + 1} / {steps.length} */}

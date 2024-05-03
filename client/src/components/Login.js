@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { AuthContext } from '../helpers/AuthContext'
-import './Login.css'
+import styles from './Login.module.css';
 
 function Login() {
  
@@ -28,9 +28,9 @@ function Login() {
   }
 
   return (
-    <div className="loginContainer">
+    <div className={styles.loginContainer}>
       <div>
-        <h1 className="loginTitle"> Gato-Gramo</h1>
+        <h1 className={styles.loginTitle}> Gato-Gramo</h1>
       </div>
         <input type="text"
           placeholder='Username' 

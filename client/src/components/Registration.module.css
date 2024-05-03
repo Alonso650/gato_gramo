@@ -1,0 +1,70 @@
+ .registrationPage{
+    font-family: Arial, Helvetica, sans-serif;
+    width: 100vw;
+    height: 100vh; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  } 
+
+  .formContainer{
+    /* display: flex; */
+    /* flex-direction: column; */
+    width: 400px;
+    height: 350px;
+    gap: 20px;
+    border: 2px solid;
+    padding: 25px;
+    border-radius: 30px;
+    text-align: center;
+    /* position: relative; */
+  }
+
+  /* .formContainer{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 300px;
+    padding-top: 50px;
+  } */
+
+  .registerBox{
+    display: flex;
+    justify-content: space-between;
+  }
+
+
+  .formContainer button{
+    margin-top: 15px;
+    height: 40px;
+    border: none;
+    background-color: darkcyan;
+    border-radius: 5px;
+    color: white;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform:translateX(-50%);
+    align-items: center;
+    
+    
+  }
+  
+  .formContainer button:hover{
+    cursor: pointer;
+    background-color: darkcyan;
+  }
+
+  .registerBox label{
+    margin-left: 30px;
+    margin-bottom: 10px;
+  } 
+
+  .registerBox input{
+    margin-right: 30px;
+    margin-bottom: 10px;
+  }
+
+  .registerBox label:after{
+    content: ":";
+  }

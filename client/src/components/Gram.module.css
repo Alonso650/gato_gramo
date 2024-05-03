@@ -1,7 +1,4 @@
-
-  
-  
-  /* INDIVIDUAL GRAM */
+/* INDIVIDUAL GRAM */
   .gramPage{
     display: flex;
     flex-direction: row;
@@ -160,5 +157,17 @@
   .adoptInfoContainer{
     display: flex;
     flex-direction: column;
+    
+  }
+
+  .mapLocation{
+    text-align: center;
+  }
+  .mapDisplay{
+    width: 80%;
+    height: 160px;
+    /* border: 1px solid black; */
+    padding: 10px 10px 10px;
+    /* margin: 10px; */
     
   }

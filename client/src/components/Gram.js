@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../helpers/AuthContext";
 import mapboxgl from "mapbox-gl"
-import './Gram.css'
+import styles from './Gram.module.css'
 
 function Gram() {
   let { id } = useParams();
@@ -14,8 +14,7 @@ function Gram() {
   const { authState } = useContext(AuthContext);
 
   let navigate = useNavigate();
-
-
+  
   // made useEffect asynchronous and await is used to wait for each API call
   // to complete. Included the id variable in the dependency array to trigger the effect
   // when the id changes
@@ -41,11 +40,12 @@ function Gram() {
             center: mapData.center,
             zoom: 250,
             interactive: false,
+            attributionControl: false,
           });
           setMap(mapInstance);
         } else{
           map.setCenter(mapData.center);
-          map.setZoom(12);
+          map.setZoom(11);
           // Disable map zoom when using scroll
           map.scrollZoom.disable();
         }
@@ -58,7 +58,7 @@ function Gram() {
               data:{
                 type: 'FeatureCollection',
                 features: [{
-                  type: 'Feature',
+                 type: 'Feature',
                   geometry: {
                     type: 'Point',
                     coordinates: mapData.center
@@ -79,8 +79,8 @@ function Gram() {
                 [22, 180]
               ]
             },
-            'circle-color': 'rgba(255, 0, 0, 0.5)',
-            'circle-stroke-color': 'rgba(255, 0, 0, 1)',
+            'circle-color': 'rgba(0, 0, 255, 0.5)',
+            'circle-stroke-color': 'rgba(0, 0, 255, 1)',
             'circle-stroke-width': 1
           }
         });
@@ -198,10 +198,10 @@ function Gram() {
   
   return (
    
-    <div className="gramPage">
-      <div className="leftSide">
-        <div className="gram" id="individual">
-          <div className="title" 
+    <div className={styles.gramPage}>
+      <div className={styles.leftSide}>
+        <div className={styles.gram} id={styles.individual}>
+          <div className={styles.title}
             onClick={() => {
               if( authState.username === gramObject.username){
                 editGram("title")
@@ -210,12 +210,12 @@ function Gram() {
           >
             {gramObject.title}{" "}
           </div>
-          <div className="body">
-            <img className="gramImage" src={gramObject.image} alt="gato pic"/>    
+          <div className={styles.body}>
+            <img className={styles.gramImage} src={gramObject.image} alt="gato pic"/>    
           </div>
             {gramObject.isAdopt &&(
             <>
-            <div className="adoptInfoContainer">
+            <div className={styles.adoptInfoContainer}>
               <h3>Adoption Information</h3>
               <div>
                 <label>Cat Type:</label>
@@ -234,19 +234,6 @@ function Gram() {
                 <label>Gender: </label>
                 {gramObject.adoptInfoGender}
               </div>
-              <h5>Approximate Location of the Cat</h5>
-              <div>
-                <label>City: </label>
-                {gramObject.adoptInfoCity}
-              </div>
-              <div>
-                <label>State: </label>
-                {gramObject.adoptInfoState}
-              </div>
-              <div>
-                <label>Zipcode: </label>
-                {gramObject.adoptInfoZipcode}
-              </div>
             </div>
             </>
             )}
@@ -254,7 +241,7 @@ function Gram() {
             <label>Description: </label>
             {gramObject.gramText}           
           </div>
-          <div className="footer">
+          <div className={styles.footer}>
             {gramObject.username} 
             { authState.username === gramObject.username && (
               <button onClick={() => {deleteGram(gramObject.id)}}> Delete Gram</button>   
@@ -266,8 +253,29 @@ function Gram() {
           </div>
         </div>
       </div>
-      <div className="rightSide">
-        <div className="addCommentContainer">
+      <div className={styles.rightSide}>
+        {/* Displays the map on the gram, if it is an adoption post */}
+        {gramObject.isAdopt && (
+            <>
+              <div className={styles.mapLocation}>
+               {gramObject.isFromShelter ? (
+                <>
+                  <h3>Location of the Shelter:</h3>
+                </>
+               ) : (
+                <>
+                  <h3>Approximate location of the cat:</h3>
+                </>
+               )} 
+                <span style={{ fontSize: '16px', padding: '5px'}}>{gramObject.adoptInfoCity},</span>
+                <span style={{ fontSize: '16px'}}>{gramObject.adoptInfoState}</span> 
+                <span style={{ fontSize: '16px', padding: '5px'}}>{gramObject.adoptInfoZipcode}</span>
+                
+              </div>
+                 <div id="mapContainer" className={styles.mapDisplay}></div>
+            </>
+          )}
+        <div className={styles.addCommentContainer}>
           {/* grab values directly from inputs and set them into a state to use later (applies to the onChange)*/}
           <input 
             type="text" 
@@ -279,18 +287,13 @@ function Gram() {
             }}
           />
           <button onClick={addComment}>Add Comment</button>
-          {/* Displays the map on the gram, if it is an adoption post */}
-          {gramObject.isAdopt && (
-            <>
-              <div id="mapContainer" style={{ width: '100%', height: '400px'}}></div>
-            </>
-          )}
+          
         </div>
         
-        <div className="listOfComments">
+        <div className={styles.listOfComments}>
           {comments.map((comment, key) => {
             return(
-              <div key={key} className="comment">
+              <div key={key} className={styles.comment}>
                 {comment.commentBody}
                 <label>Username: {comment.username}</label>
                 {authState.username === comment.username && <button onClick={() => {deleteComment(comment.id)}}>Delete</button>}
