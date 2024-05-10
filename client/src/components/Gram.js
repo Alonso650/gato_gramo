@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../helpers/AuthContext";
 import mapboxgl from "mapbox-gl"
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
 import styles from './Gram.module.css'
 
 function Gram() {
@@ -195,6 +197,15 @@ function Gram() {
     }
     // maybe do the same thing but for images?
   };
+
+//   const StyledLeftSide = styled.div`
+//   flex: 50%;
+//   height: calc(100vh - 70px);
+//   display: grid;
+//   place-items: center;
+//   /* Add conditional margin to center the gram when not an adoption form */
+//   margin-left: ${props => props.isAdopt ? '0' : 'auto'};
+// `;
   
   return (
    
@@ -213,30 +224,6 @@ function Gram() {
           <div className={styles.body}>
             <img className={styles.gramImage} src={gramObject.image} alt="gato pic"/>    
           </div>
-            {gramObject.isAdopt &&(
-            <>
-            <div className={styles.adoptInfoContainer}>
-              <h3>Adoption Information</h3>
-              <div>
-                <label>Cat Type:</label>
-                {gramObject.adoptInfoCatType}
-              </div>
-              {gramObject.adoptInfoIsStray ? (
-                <div>
-                <label>Stray: </label> Yes
-              </div>
-              ) : (
-                <div>
-                <label>Stray: </label> No
-              </div>
-              )}
-              <div>
-                <label>Gender: </label>
-                {gramObject.adoptInfoGender}
-              </div>
-            </div>
-            </>
-            )}
           <div>
             <label>Description: </label>
             {gramObject.gramText}           
@@ -244,13 +231,43 @@ function Gram() {
           <div className={styles.footer}>
             {gramObject.username} 
             { authState.username === gramObject.username && (
-              <button onClick={() => {deleteGram(gramObject.id)}}> Delete Gram</button>   
+              <DeleteForeverIcon  className={styles.footerBtn} style={{color: 'red'}} onClick={() => {deleteGram(gramObject.id)}} />
+              // <button onClick={() => {deleteGram(gramObject.id)}}> Delete Gram</button>   
             )}
             {/* Need to rework the edit portion of the gram */}
             { authState.username === gramObject.username && (
-              <button onClick={() => {editGram("body")}}>Edit Gram</button>
+              <EditIcon onClick={() => {editGram("body")}} />
+              // <button onClick={() => {editGram("body")}}>Edit Gram</button>
             )}  
           </div>
+        </div>
+        
+        <div className={styles.addCommentContainer}>
+          {/* grab values directly from inputs and set them into a state to use later (applies to the onChange)*/}
+          <input 
+            type="text" 
+            placeholder="Add a comment..." 
+            autoComplete='off'
+            value={newComment} 
+            onChange={(event) => {
+              setNewComment(event.target.value)
+            }}
+          />
+          <button onClick={addComment}>Add Comment</button>
+          
+        </div>
+        <div className={styles.listOfComments}>
+          {comments.map((comment, key) => {
+            return(
+              <div key={key} className={styles.comment}>
+                 <label style={{ fontSize: '25px', color: 'green', padding: '5px'}}>{comment.username}:</label>
+                {comment.commentBody}
+                {/* NEED TO FIX DELETE COMMENT BUTTON FUNCTION */}
+                {authState.username === comment.username && <DeleteForeverIcon  className={styles.commentBtn} style={{ color: 'red'}}onClick={() => {deleteComment(comment.id)}} />}
+              </div>
+
+            )
+          })}
         </div>
       </div>
       <div className={styles.rightSide}>
@@ -275,32 +292,30 @@ function Gram() {
                  <div id="mapContainer" className={styles.mapDisplay}></div>
             </>
           )}
-        <div className={styles.addCommentContainer}>
-          {/* grab values directly from inputs and set them into a state to use later (applies to the onChange)*/}
-          <input 
-            type="text" 
-            placeholder="Add a comment..." 
-            autoComplete='off'
-            value={newComment} 
-            onChange={(event) => {
-              setNewComment(event.target.value)
-            }}
-          />
-          <button onClick={addComment}>Add Comment</button>
-          
-        </div>
-        
-        <div className={styles.listOfComments}>
-          {comments.map((comment, key) => {
-            return(
-              <div key={key} className={styles.comment}>
-                {comment.commentBody}
-                <label>Username: {comment.username}</label>
-                {authState.username === comment.username && <button onClick={() => {deleteComment(comment.id)}}>Delete</button>}
+          {gramObject.isAdopt &&(
+            <>
+            <div className={styles.adoptInfoContainer}>
+              <h3>Adoption Information</h3>
+              <div>
+                <label>Cat Type:</label>
+                {gramObject.adoptInfoCatType}
               </div>
-            )
-          })}
-        </div>
+              {gramObject.adoptInfoIsStray ? (
+                <div>
+                <label>Stray: </label> Yes
+              </div>
+              ) : (
+                <div>
+                <label>Stray: </label> No
+              </div>
+              )}
+              <div>
+                <label>Gender: </label>
+                {gramObject.adoptInfoGender}
+              </div>
+            </div>
+            </>
+            )}
       </div>
     </div>
       

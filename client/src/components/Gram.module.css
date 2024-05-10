@@ -12,6 +12,8 @@
     height: calc(100vh - 70px);
     display: grid;
     place-items: center;
+    /* Adding conditional margin to center the gram
+    when not an adoption form */
   }
 
   .gramImage{
@@ -60,12 +62,14 @@
     place-content: center;
   }
   
-  .gram .footer{
+  .footer{
     flex: 20%;
     border-top: 1px solid lightgray;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding-left: 15px;
+    padding-right: 15px;
     background-color: darkcyan;
     color: white;
     border-bottom-left-radius: 10px;
@@ -97,12 +101,18 @@
     font-size: large;
   }
   
-  .footer .buttons{
+  /* .footer .buttons{
     flex: 50%;
     display: flex;
     justify-content: flex-end;
+    margin: 50px;
     align-items: center;
+  } */
+
+  .footerBtn{
+    margin-left: auto;
   }
+  
 
   .rightSide{
     flex: 50%;
@@ -137,26 +147,45 @@
     border: 2px solid darkcyan;
   }
   
-  .rightSide .listOfComments{
+  /* .rightSide .listOfComments{
     flex: 80%;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+  } */
+
+  .listOfComments{
+    flex: 80%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
   }
   
-  .listOfComments .comment{
+  .comment{
     width: 70%;
     height: auto;
     padding: 30px;
     border: 1px solid lightgray;
     border-radius: 5px;
-    margin-top: 20px;
+    /* margin-top: 20px; */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+  }
+  .commentBtn{
+    margin-left: auto;
   }
 
   .adoptInfoContainer{
     display: flex;
     flex-direction: column;
+    border: 2px solid black;
+    margin-top: 50px;
+    padding: 20px;
     
   }
 
@@ -170,4 +199,8 @@
     padding: 10px 10px 10px;
     /* margin: 10px; */
     
+  }
+
+  .comment .username{
+    color: green;
   }
