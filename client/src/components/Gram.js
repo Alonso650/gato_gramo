@@ -115,15 +115,6 @@ function Gram() {
       }
   };
 
-  // const initializeMap = (center) => {
-  //   const mapInstance = new mapboxgl.Map({
-  //     container: 'mapContainer',
-  //     style: 'mapbox://styles/mapbox/streets-v11',
-  //     center: center,
-  //     zoom: 12
-  //   });
-  //   setMap(mapInstance);
-  // }
 
   const addComment = () => {
     axios
@@ -170,10 +161,46 @@ function Gram() {
     })
   }
 
+  // const editGram = (option) => {
+  //   let newValue = null;
+  //   if(option === "title"){
+  //     newValue = prompt("Enter new title: ");
+  //   } else {
+  //     newValue = prompt("Enter new description: ");
+  //   }
+
+  //   // If user cancels prompt do nothing
+  //   if(newValue === null){
+  //     return;
+  //   }
+
+  //   console.log(newValue);
+
+  //   // updating the gramObject state only after the API call is successful
+  //   axios.put(`http://localhost:3001/grams/${option}`, {
+  //     newValue: newValue,
+  //     id: id,
+  //   },
+  //   {
+  //     headers: {accessToken: localStorage.getItem("accessToken") },
+  //   }
+  //   ).then(() => {
+  //     setGramObject((prevGramObject) => ({
+  //       ...prevGramObject,
+  //       [option]: newValue,
+  //     }));
+  //   });
+  // };
+
   const editGram = (option) => {
     if(option === "title"){
       let newTitle = prompt("Enter new title");
-      axios.put("http://localhost:3001/grams/title", {
+      // if user decides to hit cancel no error shows on screen
+      if(newTitle === null){
+        return;
+      }
+
+      axios.put(`http://localhost:3001/grams/${option}`, {
         newTitle: newTitle, 
         id: id
       },
@@ -184,6 +211,10 @@ function Gram() {
       setGramObject({...gramObject, title: newTitle})
     } else {
       let newGramText = prompt("Enter new text");
+      if(newGramText === null){
+        return;
+      }
+
       axios.put("http://localhost:3001/grams/gramText", {
         newText: newGramText, 
         id: id

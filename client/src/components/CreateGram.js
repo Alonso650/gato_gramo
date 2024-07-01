@@ -21,12 +21,15 @@ function CreateGram(){
     image: "",
     adoptInfoStreet: "",
     adoptInfoCity: "",
-    adoptInfoState: "",
+    adoptInfoState: "", 
     adoptInfoZipcode: 0,
     isFromShelter: false,
     isAdopt: false,
     isStray: false,
+    // adding this flag for the last part of the adoption from
+    isFromHome: false,
   })
+
 
 
 
@@ -48,9 +51,10 @@ function CreateGram(){
     <GramForm {...data} updateFields={updateFields} />,
     <ShelterForm {...data} updateFields={updateFields} isAdopt={data.isAdopt} isFromShelter={data.isFromShelter} />,
     <StrayForm {...data} updateFields={updateFields} isStray={data.isStray}/>,
-    <HouseForm {...data} updateFields={updateFields}/>
+    <HouseForm {...data} updateFields={updateFields} isFromHome={data.isFromHome} />
   ])
 
+  console.log("Succes from isfromhome");
   const submitForm = (e) => {
     // prevents the default form submission behavior allowing the form
     // to go to next
@@ -83,6 +87,7 @@ function CreateGram(){
     formData.append("isAdopt", data.isAdopt);
     formData.append("isStray", data.isStray);
     formData.append("isFromShelter", data.isFromShelter);
+    formData.append("isFromHome", data.isFromHome);
     formData.append("adoptInfoStreet", data.adoptInfoStreet);
     formData.append("adoptInfoCity", data.adoptInfoCity);
     formData.append("adoptInfoState", data.adoptInfoState);
@@ -128,7 +133,7 @@ function CreateGram(){
           )}
         {/* <button type="submit">{isLastStep ? (data.isAdopt === false ? "Create Gram" : "Submit") : "Next"}</button> */}
         <button type="submit">
-          { (data.isFromShelter || data.isStray) ? "Submit" : "Next"}
+          { (data.isFromShelter || data.isStray || data.isFromHome) ? "Submit" : "Next"}
         </button>        
         </div>
       </form>

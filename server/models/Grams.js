@@ -40,6 +40,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.BOOLEAN,
             allowNull: true,
         },
+        isFromHome:{
+            type: DataTypes.BOOLEAN,
+            allowNull: true,
+        },
         adopInfoStreet:{
             type: DataTypes.STRING,
             allowNull: true,
