@@ -9,6 +9,14 @@
     align-items: center;
   }
 
+  .block{
+    display: block;
+  }
+
+  .none{
+    display: none;
+  }
+
 .formContainer{
     display: flex;
     flex-direction: column;
