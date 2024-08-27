@@ -331,7 +331,7 @@ function Gram() {
                 <label>Cat Type:</label>
                 {gramObject.adoptInfoCatType}
               </div>
-              {gramObject.adoptInfoIsStray ? (
+              {gramObject.isStray ? (
                 <div>
                 <label>Stray: </label> Yes
               </div>

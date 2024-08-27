@@ -11,9 +11,6 @@ const MAX_STEPS = 3;
 
 function CreateGram(){
   const navigate = useNavigate();
-  // const [isAdopt, setIsAdopt] = useState(false);
-  // const [isFromShelter, setIsFromShelter] = useState(false);
-  // const [isStray, setIsStray] = useState(false);
   const [formStep, setFormStep] = useState(0);
   const { watch, register, handleSubmit, formState:{errors}} = useForm({
     defaultValues:{
@@ -38,9 +35,11 @@ function CreateGram(){
   const watchedIsFromShelter = watch("isFromShelter");
 
   const completeFormStep = () => {
-    if(formStep < 2){
+    if(formStep == 0 || (formStep === 1 && watchedIsAdopt === 'true')){
       setFormStep(cur => cur + 1);
-      console.log("step: " + (formStep + 1));
+    }
+    if(formStep === 1 && watchedIsAdopt === 'false'){
+      handleSubmit(submitForm);
     }
   }
   const handleNextButton = (e) => {
@@ -69,24 +68,29 @@ function CreateGram(){
 
   const submitForm = (data) => {
 
-    if(formStep === 2 || (formStep === 1 && data.isAdopt === "false")){
+    if(formStep === 2){
       const formData = new FormData();
+      if(data.isFromShelter === 'true'){
+        data.isStray = 'false';
+      } else if (data.isStray === 'true'){
+        data.isFromShelter = 'false';
+      }
+
     
     /* Since I have named the file input as "image", to access the information
        I have to specify the name so data.image[0] allows access to the file.
        Then include all information in a formdata
 
     */
-
-    formData.append("image", data.image[0]);
-    formData.append("gramText", data.gramText);
     formData.append("title", data.title);
+    formData.append("gramText", data.gramText);
+    formData.append("image", data.image[0]);
     // adoption info
     formData.append("isAdopt", data.isAdopt);
-    formData.append("isFromShelter", data.isFromShelter);
     formData.append("adoptInfoGender", data.adoptInfoGender);
     formData.append("adoptInfoCatType", data.adoptInfoCatType);
     formData.append("isStray", data.isStray);
+    formData.append("isFromShelter", data.isFromShelter);
     formData.append("adoptInfoStreet", data.adoptInfoStreet); 
     formData.append("adoptInfoCity", data.adoptInfoCity);
     formData.append("adoptInfoState", data.adoptInfoState);
@@ -103,10 +107,40 @@ function CreateGram(){
         navigate("/");
       })
       .catch((err) =>alert("File upload error: " + err.message))
-
     completeFormStep();
-    }
-    
+    } else if (formStep === 1 && data.isAdopt === "false"){
+      const formData = new FormData();
+      data.isAdopt =  'false';
+      data.isFromShelter = data.isFromShelter === 'false'
+      data.isStray = data.isStray === 'false';
+
+      formData.append("title", data.title);
+      formData.append("gramText", data.gramText);
+      formData.append("image", data.image[0]);
+      // adoption info
+      formData.append("isAdopt", data.isAdopt);
+      formData.append("adoptInfoGender", data.adoptInfoGender);
+      formData.append("adoptInfoCatType", data.adoptInfoCatType);
+      formData.append("isStray", data.isStray);
+      formData.append("isFromShelter", data.isFromShelter);
+      formData.append("adoptInfoStreet", data.adoptInfoStreet); 
+      formData.append("adoptInfoCity", data.adoptInfoCity);
+      formData.append("adoptInfoState", data.adoptInfoState);
+      formData.append("adoptInfoZipcode", data.adoptInfoZipcode);
+      
+  
+      axios.post("http://localhost:3001/grams", formData,{ 
+        headers: {
+          accessToken: localStorage.getItem("accessToken"),
+          "Content-Type": "multipart/form-data"
+        },
+        }).then((response) => {
+          console.log(response);
+          navigate("/");
+        })
+        .catch((err) =>alert("File upload error: " + err.message))
+      completeFormStep();
+    }    
   };
 
   /*
@@ -169,7 +203,6 @@ function CreateGram(){
           <div>
             <select
               {...register('isAdopt')}
-              // onChange={handleAdoptChange}
             >
               <option value="">Select</option>
               <option value="true">Yes</option>
@@ -183,7 +216,6 @@ function CreateGram(){
             <div>
               <select
                 {...register('isFromShelter')}
-                // onChange={handleShelterChange}
               >
                 <option value="">Select</option>
                 <option value="true">Yes</option>
@@ -193,12 +225,13 @@ function CreateGram(){
 
             <label> Is This a stray cat? </label>
             <div>
-              <input
-                type="checkbox"
-                id="isStray"
+              <select
                 {...register('isStray')}
-                // onChange={handleStrayChange}
-              />
+              >
+                <option value="">Select</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
             </div>
             </>
           )}
