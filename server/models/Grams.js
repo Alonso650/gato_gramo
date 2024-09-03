@@ -90,12 +90,19 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.BOOLEAN,
             allowNull: true,
         },
-        adoptInfoGender:{
+        infoGender:{
             type: DataTypes.STRING,
             allowNull: true,
         },
-       
-        adoptInfoCatType:{
+        infoBreed:{
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        infoHairPattern:{
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        infoCoatLength:{
             type: DataTypes.STRING,
             allowNull: true,
         },

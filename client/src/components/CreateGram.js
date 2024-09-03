@@ -4,10 +4,10 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { validationSchema } from "../helpers/schema"
 import { yupResolver } from "@hookform/resolvers/yup"
+import RenderButton from './RenderButton';
 import styles from './CreateGram.module.css'
 
 const MAX_STEPS = 3;
-
 
 function CreateGram(){
   const navigate = useNavigate();
@@ -17,11 +17,13 @@ function CreateGram(){
       title: "",
       gramText: "",
       image: "",
+      infoGender: "",
+      infoBreed: "",
+      infoHairPattern: "",
+      infoCoatLength: "",
       isAdopt: "",
       isFromShelter: "",
-      adoptInfoGender: "",
       IsStray: "",
-      adoptInfoCatType: "",
       adoptInfoStreet: "",
       adoptInfoCity: "",
       adoptInfoState: "",
@@ -31,35 +33,19 @@ function CreateGram(){
   });
 
   const watchedIsAdopt = watch("isAdopt");
-  const watchedIsStray = watch("isStray");
-  const watchedIsFromShelter = watch("isFromShelter");
 
   const completeFormStep = () => {
-    if(formStep == 0 || (formStep === 1 && watchedIsAdopt === 'true')){
+    if(formStep === 0 || (formStep === 1 && watchedIsAdopt === 'true')){
       setFormStep(cur => cur + 1);
     }
     if(formStep === 1 && watchedIsAdopt === 'false'){
       handleSubmit(submitForm);
     }
   }
+
   const handleNextButton = (e) => {
     e.preventDefault();
     completeFormStep();
-  }
-
-  // refractor into its own component
-  const renderButton = () => {
-    if(formStep > 2){
-      return undefined;
-    } else if (formStep === 2 || (formStep === 1 && watchedIsAdopt === "false")){
-      return (
-        <button type="submit">Create Gram!</button>
-      )
-    } else {
-      return (
-        <button type="button" onClick={handleNextButton}>Next</button>
-      )
-    }
   }
 
   const goToPrevStep = () => {
@@ -85,10 +71,12 @@ function CreateGram(){
     formData.append("title", data.title);
     formData.append("gramText", data.gramText);
     formData.append("image", data.image[0]);
+    formData.append("infoGender", data.infoGender);
+    formData.append("infoBreed", data.infoBreed);
+    formData.append("infoHairPattern", data.infoHairPattern);
+    formData.append("infoCoatLength", data.infoCoatLength);
     // adoption info
     formData.append("isAdopt", data.isAdopt);
-    formData.append("adoptInfoGender", data.adoptInfoGender);
-    formData.append("adoptInfoCatType", data.adoptInfoCatType);
     formData.append("isStray", data.isStray);
     formData.append("isFromShelter", data.isFromShelter);
     formData.append("adoptInfoStreet", data.adoptInfoStreet); 
@@ -117,10 +105,12 @@ function CreateGram(){
       formData.append("title", data.title);
       formData.append("gramText", data.gramText);
       formData.append("image", data.image[0]);
+      formData.append("infoGender", data.infoGender);
+      formData.append("infoBreed", data.infoBreed);
+      formData.append("infoHairPattern", data.infoHairPattern);
+      formData.append("infoCoatLength", data.infoCoatLength);
       // adoption info
       formData.append("isAdopt", data.isAdopt);
-      formData.append("adoptInfoGender", data.adoptInfoGender);
-      formData.append("adoptInfoCatType", data.adoptInfoCatType);
       formData.append("isStray", data.isStray);
       formData.append("isFromShelter", data.isFromShelter);
       formData.append("adoptInfoStreet", data.adoptInfoStreet); 
@@ -150,8 +140,8 @@ function CreateGram(){
   */
 
   return(
-    <div className='createGramPage'>
-     <form className="formContainer" 
+    <div className={styles.createGramPage}>
+     <form className={styles.formContainer} 
         onSubmit ={handleSubmit(submitForm)}>
         {formStep < MAX_STEPS && (
           <div>
@@ -194,13 +184,52 @@ function CreateGram(){
               id="image"
             />
           </div>
+          <div>
+          <label>Gender: </label>
+            <select
+              {...register('infoGender')}
+              >
+                <option value="">Select</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="unsure">Unsure</option>
+              </select>
+          </div>
+          <div>
+          <label>Breed: </label>
+          <input 
+            type="text"
+            name="breed"
+            {...register('infoBreed')}
+            id="breed"
+          />
+          </div>
+          <div>
+          <label>Hair Pattern: </label>
+          <input
+            type="text"
+            name="hairpattern"
+            {...register('infoHairPattern')}
+            id="hairpattern"
+          />
+          </div>
+          <div>
+          <label>Coat Length: </label>
+            <select
+              {...register('infoCoatLength')}
+              >
+                <option value="">Select</option>
+                <option value="short">Short</option>
+                <option value="long">Long</option>
+                <option value="None">None</option>
+              </select>
+          </div>
           </section>
         )}
         
         {formStep >= 1 && (
           <section className={formStep === 1 ? styles.block : styles.none}>
           <label>Is this cat looking for a new home?</label>
-          <div>
             <select
               {...register('isAdopt')}
             >
@@ -208,12 +237,11 @@ function CreateGram(){
               <option value="true">Yes</option>
               <option value="false">No</option>
             </select>
-          </div>
 
           {watchedIsAdopt === "true" &&(
             <>
-            <label>Is This cat located at a shelter?</label>
             <div>
+            <label>Is This cat located at a shelter?</label>
               <select
                 {...register('isFromShelter')}
               >
@@ -223,8 +251,8 @@ function CreateGram(){
               </select>
             </div>
 
-            <label> Is This a stray cat? </label>
             <div>
+            <label> Is This a stray cat? </label>
               <select
                 {...register('isStray')}
               >
@@ -278,10 +306,14 @@ function CreateGram(){
           </section>
         )}
         
-        {renderButton()}
-        <pre>
+        <RenderButton
+          formStep={formStep}
+          watchedIsAdopt={watchedIsAdopt}
+          handleNextButton={handleNextButton}
+        />
+        {/* <pre>
           {JSON.stringify(watch(), null, 2)}
-          </pre>        
+          </pre>         */}
       </form>
     </div>
   )
