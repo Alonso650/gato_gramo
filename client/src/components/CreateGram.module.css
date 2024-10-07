@@ -27,7 +27,8 @@
     text-align: center;
   }
 
-.formContainer button{
+/* .formContainer button{ */
+  .gramBttn{
     margin-top: 15px;
     height: 40px;
     border: none;
@@ -36,7 +37,8 @@
     color: white;
   }
   
-  .formContainer button:hover{
+  /* .formContainer button:hover{ */
+  .gramBttn{
     cursor: pointer;
     background-color: darkcyan;
   }

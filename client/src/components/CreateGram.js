@@ -6,17 +6,18 @@ import { validationSchema } from "../helpers/schema"
 import { yupResolver } from "@hookform/resolvers/yup"
 import RenderButton from './RenderButton';
 import styles from './CreateGram.module.css'
+import { Chevronleft } from '@heroicons/react/24/solid'
 
 const MAX_STEPS = 3;
 
 function CreateGram(){
   const navigate = useNavigate();
   const [formStep, setFormStep] = useState(0);
-  const { watch, register, handleSubmit, formState:{errors}} = useForm({
+  const { watch, register, handleSubmit, formState:{errors}, setValue} = useForm({
     defaultValues:{
       title: "",
       gramText: "",
-      image: "",
+      image: [],
       infoGender: "",
       infoBreed: "",
       infoHairPattern: "",
@@ -52,8 +53,12 @@ function CreateGram(){
     setFormStep(cur => cur - 1);
   }
 
-  const submitForm = (data) => {
+  // const handleFileChange = (e) => {
+  //   const files = e.target.files;
+  //   setValue("images", files);
+  // }
 
+  const submitForm = (data) => {
     if(formStep === 2){
       const formData = new FormData();
       if(data.isFromShelter === 'true'){
@@ -62,6 +67,15 @@ function CreateGram(){
         data.isFromShelter = 'false';
       }
 
+    // Array.from(data.images).forEach(file => {
+    //   formData.append("images", file);
+    //   console.log(file);
+    // });
+    
+    // Looping through the list of images to add to the formData to send to the backend
+    for(const imageFile of data.image){
+      formData.append('image', imageFile);
+    }
     
     /* Since I have named the file input as "image", to access the information
        I have to specify the name so data.image[0] allows access to the file.
@@ -70,7 +84,6 @@ function CreateGram(){
     */
     formData.append("title", data.title);
     formData.append("gramText", data.gramText);
-    formData.append("image", data.image[0]);
     formData.append("infoGender", data.infoGender);
     formData.append("infoBreed", data.infoBreed);
     formData.append("infoHairPattern", data.infoHairPattern);
@@ -91,20 +104,38 @@ function CreateGram(){
         "Content-Type": "multipart/form-data"
       },
       }).then((response) => {
-        console.log(response);
+        console.log(response.data.image);
         navigate("/");
       })
       .catch((err) =>alert("File upload error: " + err.message))
     completeFormStep();
+    // try{
+    //   const response = axios.post("http://localhost:3001/grams", formData, {
+    //     headers: {
+    //       accessToken: localStorage.getItem("accessToken"),
+    //       "Content-Type": "multipart/form-data"
+    //     },
+    //   });
+    //   console.log(response.data.images);
+    //   navigate("/");
+    // } catch (error){
+    //   alert("File Upload Error: " + error.message);
+    // }
+    // completeFormStep();
+
     } else if (formStep === 1 && data.isAdopt === "false"){
       const formData = new FormData();
-      data.isAdopt =  'false';
+      data.isAdopt = 'false';
       data.isFromShelter = data.isFromShelter === 'false'
       data.isStray = data.isStray === 'false';
 
+      for(const imageFile of data.image){
+        formData.append('image', imageFile);
+        console.log(imageFile);
+      }
+
       formData.append("title", data.title);
       formData.append("gramText", data.gramText);
-      formData.append("image", data.image[0]);
       formData.append("infoGender", data.infoGender);
       formData.append("infoBreed", data.infoBreed);
       formData.append("infoHairPattern", data.infoHairPattern);
@@ -146,7 +177,18 @@ function CreateGram(){
         {formStep < MAX_STEPS && (
           <div>
             {formStep > 0 && (
-              <button onClick={goToPrevStep} type="button">Back</button>
+              <button 
+              onClick={goToPrevStep} type="button">Back
+                {/* <svg xmlns="http://www.w3.org/2000/svg" 
+                viewBox="0 0 20 30" 
+                fill="currentColor">
+              <path fill-rule="evenodd" 
+              d="M7.72 12.53a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 1 1 1.06 1.06L9.31 12l6.97 6.97a.75.75 0 1 1-1.06 1.06l-7.5-7.5Z" 
+              clip-rule="evenodd" 
+              />
+            </svg> */}
+            
+            </button>
             )}
             <p>
               Step {formStep + 1} of {MAX_STEPS}
@@ -174,8 +216,7 @@ function CreateGram(){
             {...register('gramText')}
           />
   
-          {/* <label>Image:</label> */}
-          <div>
+          {/* <div>
             <label>Image:</label>
             <input
               type="file"
@@ -183,6 +224,16 @@ function CreateGram(){
               {...register("image")}
               id="image"
             />
+          </div> */}
+          <div>
+            <label>Image(s):</label>
+            <input
+              type="file"
+              name="image"
+              id="image"
+              multiple
+              {...register("image")}
+              />
           </div>
           <div>
           <label>Gender: </label>

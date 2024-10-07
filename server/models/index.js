@@ -28,6 +28,7 @@ db.Grams = require("./Grams.js")(sequelize, Sequelize);
 db.Comments = require("./Comments.js")(sequelize, Sequelize);
 db.Users = require("./Users.js")(sequelize, Sequelize);
 db.Likes = require("./Likes.js")(sequelize, Sequelize);
+db.Images = require("./Images.js")(sequelize, Sequelize);
 
 // Defining associations/relationships between tables 
 db.Grams.hasMany(db.Comments,{ 
@@ -50,6 +51,10 @@ db.Users.hasMany(db.Likes,{
     onDelete: 'CASCADE',
 });
 
+db.Likes.belongsTo(db.Grams,{
+    foreignKey: "GramId",
+});
+
 db.Likes.belongsTo(db.Users,{
     foreignKey: "UserId",
 });
@@ -58,7 +63,12 @@ db.Grams.hasMany(db.Likes,{
     onDelete: 'CASCADE',
 });
 
-db.Likes.belongsTo(db.Grams,{
+
+db.Grams.hasMany(db.Images, {
+    onDelete: "CASCADE",
+});
+
+db.Images.belongsTo(db.Grams, {
     foreignKey: "GramId",
 });
 

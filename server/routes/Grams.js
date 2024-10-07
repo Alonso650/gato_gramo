@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const router = express.Router()
-const { Grams, Likes } = require("../models");
+const { Grams, Likes, Images } = require("../models");
 const { validateToken } = require("../middleware/AuthMiddleware");
 const multer = require("multer");
 const cloudinary = require('cloudinary');
@@ -20,7 +20,8 @@ const imageFilter = function(req, file, callback){
 };
 
 
-var upload = multer({ storage: storage, fileFiler: imageFilter});
+//var upload = multer({ storage: storage, fileFiler: imageFilter});
+var upload = multer({ storage: storage, fileFilter: imageFilter });
 
 // storing the photos on cloudinary
 cloudinary.config({
@@ -28,8 +29,6 @@ cloudinary.config({
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-
-
 
 router.get('/', validateToken, async (req, res) => {
     const listOfGrams = await Grams.findAll({include: [Likes]});
@@ -44,6 +43,13 @@ router.get('/byId/:id', async (req, res) => {
     const gram = await Grams.findByPk(id);
     res.json(gram);
 })
+// router.get('/byId/:id', async (req, res) => {
+//     const id = req.params.id;
+//     const gram = await Grams.findByPk(id, {
+//         include: [{model: Images }] // Include associated images
+//     });
+//     res.json(gram);
+// })
 
 router.get('/byuserId/:id', async (req, res) => {
     const id = req.params.id;
@@ -56,20 +62,57 @@ router.get('/byuserId/:id', async (req, res) => {
 }) 
 
 
-router.post("/", upload.single('image'), validateToken, (req, res) => {
-    cloudinary.v2.uploader.upload(req.file.path, async (err, result) =>{
-        const gram = req.body;
+// Remeber to include validateToken!
+// Remember to keep incrementing the ids for grams by 1 inside of Postman for testing
 
-        // the result.secure_url represents the location of the image
-        // located in the cloudinary
-        gram.image = result.secure_url;
-        gram.imageId = result.public_id;
+// router.post("/", upload.single('image'), (req, res) => {
+//     cloudinary.v2.uploader.upload(req.file.path, async (err, result) =>{
+//         const gram = req.body;
+//         console.log(gram);
+//         // the result.secure_url represents the location of the image
+//         // located in the cloudinary
+//         gram.image = result.secure_url;
+//         gram.imageId = result.public_id;
+//         //gram.username = req.user.username;
+//         //gram.UserId = req.user.id;
+//         gram.username = "batman";
+//         gram.UserId = 1;
+//         await Grams.create(gram);
+//         res.json(gram);
+        
+//     })   
+// });
+
+// This works for backend handling multiple images now 
+// Now I need to fix the front end
+router.post("/", upload.array('image', 5), validateToken, async (req, res) => {
+        const gram = req.body;
         gram.username = req.user.username;
         gram.UserId = req.user.id;
-        await Grams.create(gram);
-        res.json(gram);
-    })   
+
+        // Info I need to pass to the Image table: result.secure_url, result.public_id
+        // and gram.id
+        // imageUrl, imagePublicId
+        // GramId
+        const createdGram = await Grams.create(gram);
+        const imageList = [];
+
+        for(const file of req.files){
+            const result = await cloudinary.v2.uploader.upload(file.path);
+                imageList.push({
+                    // the result.secure_url represents the location of the image
+                    // located in the cloudinary
+                    imageUrl: result.secure_url,
+                    imagePublicId: result.public_id,
+                    GramId: createdGram.id,
+                });
+        }
+        // Allows creating multiple image entries in the database
+        await Images.bulkCreate(imageList);
+        res.json({ createdGram, imageList});
+        
 });
+
 
 router.put("/title", validateToken, async (req, res) => {
     const { newTitle, id } = req.body;

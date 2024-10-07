@@ -1435,6 +1435,11 @@
   resolved "https://registry.npmjs.org/@floating-ui/utils/-/utils-0.2.1.tgz"
   integrity sha512-9TANp6GPoMtYzQdt54kfAyMmz1+osLlXdg2ENroU7zzrtflTLrrC/lgrIfaSe+Wu0b89GKccT7vxXA0MoAIO+Q==
 
+"@heroicons/react@^2.1.5":
+  version "2.1.5"
+  resolved "https://registry.npmjs.org/@heroicons/react/-/react-2.1.5.tgz"
+  integrity sha512-FuzFN+BsHa+7OxbvAERtgBTNeZpUjgM/MIizfVkSCL2/edriN0Hx/DWRCR//aPYwO5QX/YlgLGXk+E3PcfZwjA==
+
 "@hookform/resolvers@^2.9.5":
   version "2.9.11"
   resolved "https://registry.npmjs.org/@hookform/resolvers/-/resolvers-2.9.11.tgz"
