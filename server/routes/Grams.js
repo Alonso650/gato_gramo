@@ -31,10 +31,32 @@ cloudinary.config({
 });
 
 router.get('/', validateToken, async (req, res) => {
-    const listOfGrams = await Grams.findAll({include: [Likes]});
+    // const listOfGrams = await Grams.findAll({include: [Likes]});
+    try{
+        const listOfGrams = await Grams.findAll({
+            include: [
+                { model: Likes},
+                //{ model: Images, order: [['createdAt', 'ASC']]} // Include associated images for each gram
+                { model: Images},
+            ]
+        });
+    
+        const likedGrams = await Likes.findAll({ where: { UserId: req.user.id} });
+        //const imageGrams = await Images.findAll({ where: { GramId: req.gram.id} });
 
-    const likedGrams = await Likes.findAll({ where: { UserId: req.user.id} });
-    res.json({listOfGrams: listOfGrams, likedGrams: likedGrams});
+        res.json({
+            listOfGrams: listOfGrams,
+            likedGrams: likedGrams,
+            //imageGrams: imageGrams,
+        });
+    } catch (error){
+        console.error("Error fetching grams data: ", error);
+        res.status(500).json({ error: "Failed to retrieve grams data." });
+    }
+    
+
+    // added code for images 
+    //res.json({listOfGrams: listOfGrams, likedGrams: likedGrams});
 });
 
 
@@ -60,6 +82,15 @@ router.get('/byuserId/:id', async (req, res) => {
     });
     res.json(listOfGrams);
 }) 
+
+// router to get the images based on gramId
+router.get("/getImages/:gramId", async (req, res) => {
+    const gramId = req.params.gramId
+    const images = await Images.findAll({
+        where: {GramId: gramId}
+    });
+    res.json(images);
+})
 
 
 // Remeber to include validateToken!
@@ -90,10 +121,6 @@ router.post("/", upload.array('image', 5), validateToken, async (req, res) => {
         gram.username = req.user.username;
         gram.UserId = req.user.id;
 
-        // Info I need to pass to the Image table: result.secure_url, result.public_id
-        // and gram.id
-        // imageUrl, imagePublicId
-        // GramId
         const createdGram = await Grams.create(gram);
         const imageList = [];
 

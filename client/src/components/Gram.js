@@ -15,6 +15,9 @@ function Gram() {
   const [map, setMap] = useState(null);
   const { authState } = useContext(AuthContext);
 
+  //Adding new code to display multiple images on gram
+  const [images, setImages] = useState([]);
+
   let navigate = useNavigate();
   
   // made useEffect asynchronous and await is used to wait for each API call
@@ -30,9 +33,18 @@ function Gram() {
         const commentsResponse = await axios.get(`http://localhost:3001/comments/${id}`);
         setComments(commentsResponse.data);
 
+        // retreving images from the backend based on the gramId
+        const imagesResponse = await axios.get(`http://localhost:3001/grams/getImages/${id}`);
+        setImages(imagesResponse.data);
+        console.log(imagesResponse.data);
+        //console.log(imagesResponse.data[0]);
+        //console.log(images[0].imageUrl);
+        
+
+
         const location = `${gramObject.adoptInfoCity}, ${gramObject.adoptInfoState}, ${gramObject.adoptInfoZipcode}`;
         const mapData = await fetchMapData(location);
-        console.log(process.env.REACT_APP_API_KEY);
+        //console.log(process.env.REACT_APP_API_KEY);
 
         if(!map){
           mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API;
@@ -253,7 +265,15 @@ function Gram() {
             {gramObject.title}{" "}
           </div>
           <div className={styles.body}>
-            <img className={styles.gramImage} src={gramObject.image} alt="gato pic"/>    
+            {/* Create a conditional statement to ensure there is at least one image available and waiting for the image to load */}
+            {images.length > 0 &&(
+              <img
+              className={styles.gramImage}
+              // src={images[0].imageUrl}
+              src={images.sort((a, b) => a.id - b.id)[0].imageUrl}
+              alt="gato pic"
+            />
+            )}
           </div>
           <div>
             <label>Description: </label>

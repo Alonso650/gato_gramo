@@ -13,23 +13,59 @@ function Home() {
     // state that will hold a list of likedGrams
     const [likedGrams, setLikedGrams] = useState([]);
     const { authState } = useContext(AuthContext);
+
+    // Adding new code to display images on the home page
+    //const [images, setImages] = useState([]);
     let navigate = useNavigate();
 
-  useEffect(() => {
-    if(!localStorage.getItem("accessToken")){
-      navigate('/login');
-    } else {
-      axios.get("http://localhost:3001/grams",{ 
-        headers: { accessToken: localStorage.getItem('accessToken')}}
-      ).then((response) => {
-        setListOfGrams(response.data.listOfGrams);
-        setLikedGrams(response.data.likedGrams.map((like) => { 
-          return like.GramId
-          })
-        );
-      });
-    }
-  },[]);
+    // maybe redo with async? not sure yet
+  // useEffect(() => {
+  //   if(!localStorage.getItem("accessToken")){
+  //     navigate('/login');
+  //   } else {
+  //     axios.get("http://localhost:3001/grams",{ 
+  //       headers: { accessToken: localStorage.getItem('accessToken')}}
+  //     ).then((response) => {
+  //       setListOfGrams(response.data.listOfGrams);
+  //       setLikedGrams(response.data.likedGrams.map((like) => { 
+  //         return like.GramId
+  //         })
+  //       );
+  //     });
+  //   }
+  // },[]);
+    useEffect(() => {
+      const fetchData = async () => {
+        try{
+          const gramsResponse = await axios.get("http://localhost:3001/grams", {
+            headers: { accessToken: localStorage.getItem('accessToken') }
+          });
+          console.log(gramsResponse.data);
+          //console.log(gramsResponse.data.listOfGrams[0].Images)
+
+          setListOfGrams(gramsResponse.data.listOfGrams);
+
+          setLikedGrams(
+            gramsResponse.data.likedGrams.map((like) => like.GramId)
+          );
+          // optional chaining '?' used to avoid errors if Images[0] doesnt exist
+          // it safely checks if Images[0] is defined before attempting to access imageUrl
+          // so if a Gram doesn't have any images, it wont throw an error, itll simply return undefined
+          // setImages(
+          //   gramsResponse.data.listOfGrams.map((gram) => gram.Images[0]?.imageUrl)
+          // );
+        } catch(error){
+          console.error("Error fetching grams data", error);
+        }
+      };
+
+      if(!localStorage.getItem("accessToken")){
+        navigate('/login');
+      } else {
+        fetchData();
+      }
+    }, [navigate]);
+
 
   const likeAPost = (gramId) => {
     axios.post("http://localhost:3001/likes", 
@@ -74,6 +110,9 @@ function Home() {
   return (
     <div className={styles.gridGram}>
     {listOfGrams.map((value, key) => {
+          const imageUrl = value.Images.length > 0 ? value.Images[0].imageUrl : null;
+
+          console.log("Image URL:", imageUrl);
       return (
         <div key={key} className={styles.gram}>
           <div className={styles.title}>{value.title}</div>
@@ -84,7 +123,25 @@ function Home() {
               }}
             >
               {/* {value.gramText} */}
-              <img className={styles.gramImage} src={value.image} alt="Gram Image"/>
+              {/* <img className={styles.gramImage} src={value.image} alt="Gram Image"/> */}
+              {/* { images.length > 0 && images.map((image, index) => (
+                <img
+                  key={index}
+                  className={styles.gramImage}
+                  //src={images[0].imageUrl}
+                  //src={images[0]}
+                  src={image[0]}
+                  alt={`gato pic + ${index + 1}`}
+                />
+              ))} */}
+              {value.Images.length > 0 && (
+                  <img
+                    className={styles.gramImage}
+                    //src={value.Images[0].imageUrl}
+                    src={value.Images.sort((a, b) => a.id - b.id)[0].imageUrl} // sorts images by ID before displaying the first one since images were not showing up in order when uploading
+                    alt="gato_pic"
+                  />
+              )}
             </div>
             <div className={styles.footer}>
               <div className={styles.username}>
