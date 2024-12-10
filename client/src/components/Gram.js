@@ -13,6 +13,7 @@ function Gram() {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [map, setMap] = useState(null);
+  const [imagePos, setImagePos] = useState(0);
   const { authState } = useContext(AuthContext);
 
   //Adding new code to display multiple images on gram
@@ -126,6 +127,26 @@ function Gram() {
         throw new Error('Location not found');
       }
   };
+
+  const goNextImg = () => {   
+    // will increment the position by one until reaches the end of list
+    // then if imagePos reaches behind length of image list then set
+    // the position to 0 (back to the beginning)
+
+    setImagePos(cur => cur + 1)
+    if(imagePos >= images.length - 1){
+      setImagePos(0);
+    } 
+  }
+
+  const goPrevImg = () => {
+
+    setImagePos(cur => cur - 1)
+    if(imagePos === 0){
+      setImagePos(images.length - 1);
+    }
+    
+  }
 
 
   const addComment = () => {
@@ -241,6 +262,13 @@ function Gram() {
     // maybe do the same thing but for images?
   };
 
+  /* 
+    In order to implement clicking through images. Basically implement similar to how the 
+    creategram form is like with the steps + 1
+    Ref: CreateGram
+
+  */
+
 //   const StyledLeftSide = styled.div`
 //   flex: 50%;
 //   height: calc(100vh - 70px);
@@ -267,12 +295,16 @@ function Gram() {
           <div className={styles.body}>
             {/* Create a conditional statement to ensure there is at least one image available and waiting for the image to load */}
             {images.length > 0 &&(
+              <div className={styles.containerImg}>
+                <button className={styles.leftBtn} onClick={goPrevImg}>&#8249;</button>
               <img
-              className={styles.gramImage}
-              // src={images[0].imageUrl}
-              src={images.sort((a, b) => a.id - b.id)[0].imageUrl}
-              alt="gato pic"
-            />
+                className={styles.gramImage}
+                // src={images[0].imageUrl}
+                src={images.sort((a, b) => a.id - b.id)[imagePos].imageUrl}
+                alt="gato pic"
+              />
+              <button className={styles.rightBtn} onClick={goNextImg}>&#8250;</button>
+              </div>
             )}
           </div>
           <div>

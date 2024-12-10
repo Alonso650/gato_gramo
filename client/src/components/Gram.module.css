@@ -82,6 +82,19 @@
     object-fit: contain;
   }
 
+  .leftBtn{
+    border-radius: 50%;
+    position: absolute;
+  }
+
+  .rightBtn{
+    position: absolute;
+  }
+
+  .containerImg{
+
+  }
+
   #individual{
     height: 500px;
     width: 600px;
