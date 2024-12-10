@@ -101,7 +101,6 @@ function Gram() {
         });
       });
     }
-
         // new mapboxgl.Marker()
         //   .setLngLat(mapData.center)
         //   .addTo(map);
@@ -128,10 +127,9 @@ function Gram() {
       }
   };
 
+  // Increment imagePos to the next image on the list and if reaches
+  // the end of the list it will set the position to 0
   const goNextImg = () => {   
-    // will increment the position by one until reaches the end of list
-    // then if imagePos reaches behind length of image list then set
-    // the position to 0 (back to the beginning)
 
     setImagePos(cur => cur + 1)
     if(imagePos >= images.length - 1){
@@ -139,13 +137,15 @@ function Gram() {
     } 
   }
 
+  // Decrement imagePos to the previous image on the list and if 
+  // user hits previous on the first image it will set the position
+  // to the last image in the list
   const goPrevImg = () => {
 
     setImagePos(cur => cur - 1)
     if(imagePos === 0){
       setImagePos(images.length - 1);
     }
-    
   }
 
 
