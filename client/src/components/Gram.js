@@ -262,12 +262,6 @@ function Gram() {
     // maybe do the same thing but for images?
   };
 
-  /* 
-    In order to implement clicking through images. Basically implement similar to how the 
-    creategram form is like with the steps + 1
-    Ref: CreateGram
-
-  */
 
 //   const StyledLeftSide = styled.div`
 //   flex: 50%;
@@ -283,13 +277,7 @@ function Gram() {
     <div className={styles.gramPage}>
       <div className={styles.leftSide}>
         <div className={styles.gram} id={styles.individual}>
-          <div className={styles.title}
-            onClick={() => {
-              if( authState.username === gramObject.username){
-                editGram("title")
-              }
-            }}
-          >
+          <div className={styles.title}>
             {gramObject.title}{" "}
           </div>
           <div className={styles.body}>
@@ -319,8 +307,7 @@ function Gram() {
             )}
             {/* Need to rework the edit portion of the gram */}
             { authState.username === gramObject.username && (
-              <EditIcon onClick={() => {editGram("body")}} />
-              // <button onClick={() => {editGram("body")}}>Edit Gram</button>
+              <EditIcon onClick={() => navigate(`/editGram/${gramObject.id}`)} />
             )}  
           </div>
         </div>

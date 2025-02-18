@@ -140,7 +140,7 @@ router.post("/", upload.array('image', 5), validateToken, async (req, res) => {
         
 });
 
-
+/*
 router.put("/title", validateToken, async (req, res) => {
     const { newTitle, id } = req.body;
     await Grams.update({title: newTitle}, {where: {id: id}});
@@ -153,6 +153,92 @@ router.put("/gramText", validateToken, async (req, res) => {
     await Grams.update({ gramText: newText}, { where: { id: id}})
     res.json(newText);
 })
+*/
+
+// need to test if this works or not
+// also, thinking that with the req im retrieving the whole gram Id
+// maybe I can gather the info from req.body to be able to update each piece of info individually
+// but then how would i do the image? maybe reference the id to go to the image table 
+// router.put("/editGram/:gramId", validateToken, upload.array('image', 5), async (req, res) => {
+router.put('/editGram/:gramId', upload.array('image', 5), async (req, res) => {
+    try{
+        const gramId = req.params.gramId;
+
+
+        const foundGram = await Grams.findByPk(gramId);
+        if(!foundGram){
+            return res.status(404).json({ error: "Gram not found"});
+        } else {
+            console.log("GRAM FOUND")
+        }
+        //console.log(res.json({ foundGram }))j
+        console.log(foundGram);
+        console.log(foundGram.title);
+        console.log(req.body);
+
+       // const [updatedRows] = await Grams.update({
+        const updatedGram = await Grams.update({
+            title: req.body.title,
+            gramText: req.body.gramText,
+            isAdopt: req.body.isAdopt,
+            infoGender: req.body.infoGender,
+            infoBreed: req.body.infoBreed,
+            infoHairPattern: req.body.infoHairPattern,
+            infoCoatLength: req.body.infoCoatLength,
+            isStray: req.body.isStray,
+            isFromShelter: req.body.isFromShelter,
+            adoptInfoStreet: req.body.adoptInfoStreet,
+            adoptInfoCity: req.body.adoptInfoCity,
+            adoptInfoState: req.body.adoptInfoState,
+            adoptInfoZipcode: req.body.adoptInfoZipcode,
+        },
+        {
+            where:{ id: gramId},
+        }
+        );
+
+        // if(updatedRows === 0){
+        //     return res.status(404).json({ error: "Update Failed or No Changes were made"});
+        // }
+        if(updatedGram === null){
+            return res.status(404).json({ error: "Update Failed or No Changes we're made"});
+        }
+
+        // const updatedGram = await Grams.findOne({ where: { GramId: gramId}});
+        res.json({ message: "Gram updated successfully ", updatedGram });
+    } catch (error){
+        console.error("Error updating gram: ", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+    
+    
+    
+
+
+// router.put("/editGram/:gramId", validateToken, upload.array('image', 5), async (req, res) => {
+//     //const gramId = req.params.gramId;
+
+//     Grams.findOne({ gramId: req.params.gramId}, async function(err, gram) {
+//         // need to figure out how to destroy all images associated with the gram
+//         // then from there i can upload new images to the cloudinary as an edit
+//         // and the rest should be similar to the post
+//         // i am also referencing my booklink project
+//         imageList = [];
+//         if(err){
+//             req.flash("error", err.message);
+//         } else {
+//             if(req.files){
+//                 try{
+//                     for(const file of req.files){
+//                         const result = cloudinary.v2.uploader.
+//                         //await cloudinary.v2.uploader.destroy_resources(gram.imagePublicId);
+//                     }
+//                 }
+//             }
+//         }
+//     })
+// })
 
 // **Note: Include put routes for other components of the gram like location, cat type etc**
 

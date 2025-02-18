@@ -137,7 +137,6 @@ function Home() {
               {value.Images.length > 0 && (
                   <img
                     className={styles.gramImage}
-                    //src={value.Images[0].imageUrl}
                     src={value.Images.sort((a, b) => a.id - b.id)[0].imageUrl} // sorts images by ID before displaying the first one since images were not showing up in order when uploading
                     alt="gato_pic"
                   />

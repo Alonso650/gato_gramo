@@ -5,6 +5,7 @@ import Gram from './components/Gram';
 import Login from './components/Login';
 import PageNotFound from './components/PageNotFound';
 import Registration from './components/Registration';
+import EditGram from './components/EditGram';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from './helpers/AuthContext'
 import {useState, useEffect} from "react"
@@ -100,6 +101,7 @@ function App() {
           <Route exact path='/profile/:id' element={<Profile/>}/>
           <Route exact path='/changepassword' element={<ChangePassword/>}/>
           <Route exact path='/registration' element={<Registration/>}/>
+          <Route exact path='/editGram/:id' element={<EditGram/>}/>
           <Route exact path="*" element={<PageNotFound />}/>
       </Routes>
       </AuthContext.Provider>
