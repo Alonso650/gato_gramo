@@ -197,6 +197,7 @@ router.put('/editGram/:gramId', upload.array('image', 5), async (req, res) => {
         }
         );
 
+
         // if(updatedRows === 0){
         //     return res.status(404).json({ error: "Update Failed or No Changes were made"});
         // }

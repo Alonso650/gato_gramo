@@ -13,7 +13,7 @@ const MAX_STEPS = 3;
 function CreateGram(){
   const navigate = useNavigate();
   const [formStep, setFormStep] = useState(0);
-  const { watch, register, handleSubmit, formState:{errors}, setValue} = useForm({
+  const { watch, register, handleSubmit, formState:{errors}, trigger, setValue} = useForm({
     defaultValues:{
       title: "",
       gramText: "",
@@ -33,13 +33,13 @@ function CreateGram(){
     resolver: yupResolver(validationSchema),
   });
 
-  const watchedIsAdopt = watch("isAdopt");
+  const watchedIsAdopt = watch("isAdopt") === "true";
 
   const completeFormStep = () => {
-    if(formStep === 0 || (formStep === 1 && watchedIsAdopt === 'true')){
+    if(formStep === 0 || (formStep === 1 && watchedIsAdopt)){
       setFormStep(cur => cur + 1);
     }
-    if(formStep === 1 && watchedIsAdopt === 'false'){
+    if(formStep === 1 && !watchedIsAdopt){
       handleSubmit(submitForm);
     }
   }
@@ -53,24 +53,24 @@ function CreateGram(){
     setFormStep(cur => cur - 1);
   }
 
-  // const handleFileChange = (e) => {
-  //   const files = e.target.files;
-  //   setValue("images", files);
-  // }
+  const handleFileChange = (e) => {
+    const files = e.target.files;
+    setValue("image", files);
+    trigger("image");
+  }
 
   const submitForm = (data) => {
+    data.isAdopt = data.isAdopt === "true";
+    data.isStray = data.isStray === "true";
+    data.isFromShelter = data.isFromShelter === "true";
+
     if(formStep === 2){
       const formData = new FormData();
-      if(data.isFromShelter === 'true'){
-        data.isStray = 'false';
-      } else if (data.isStray === 'true'){
-        data.isFromShelter = 'false';
+      if(data.isFromShelter){
+        data.isStray = false;
+      } else if (data.isStray){
+        data.isFromShelter = false;
       }
-
-    // Array.from(data.images).forEach(file => {
-    //   formData.append("images", file);
-    //   console.log(file);
-    // });
     
     // Looping through the list of images to add to the formData to send to the backend
     for(const imageFile of data.image){
@@ -123,11 +123,16 @@ function CreateGram(){
     // }
     // completeFormStep();
 
-    } else if (formStep === 1 && data.isAdopt === "false"){
-      const formData = new FormData();
-      data.isAdopt = 'false';
-      data.isFromShelter = data.isFromShelter === 'false'
-      data.isStray = data.isStray === 'false';
+    // } else if (formStep === 1 && data.isAdopt === "false"){
+    //   const formData = new FormData();
+    //   data.isAdopt = 'false';
+    //   data.isFromShelter = data.isFromShelter === 'false'
+    //   data.isStray = data.isStray === 'false';
+  } else if (formStep === 1 && !data.isAdopt){
+    const formData = new FormData();
+    // data.isAdopt = 'false';
+    // data.isFromShelter = data.isFromShelter === 'false'
+    // data.isStray = data.isStray === 'false';
 
       for(const imageFile of data.image){
         formData.append('image', imageFile);
@@ -215,23 +220,21 @@ function CreateGram(){
             name="gramText"
             {...register('gramText')}
           />
-  
-          {/* <div>
-            <label>Image:</label>
-            <input
-              type="file"
-              name="image"
-              {...register("image")}
-              id="image"
-            />
-          </div> */}
           <div>
             <label>Image(s):</label>
+            {/* <input
+              type="file"
+              name="image"
+              id="image"
+              multiple
+              {...register("image")}
+              /> */}
             <input
               type="file"
               name="image"
               id="image"
               multiple
+              onChange={handleFileChange}
               {...register("image")}
               />
           </div>
@@ -289,7 +292,7 @@ function CreateGram(){
               <option value="false">No</option>
             </select>
 
-          {watchedIsAdopt === "true" &&(
+          {watchedIsAdopt &&(
             <>
             <div>
             <label>Is This cat located at a shelter?</label>
